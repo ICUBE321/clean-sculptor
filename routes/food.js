@@ -1,5 +1,7 @@
 require("express");
 
+const FoodModel = require("../models/foodmodel");
+
 const searchFood = (request, response) => {
   //logic to query food database api for an item
   const name = request.params.name;
