@@ -6,22 +6,26 @@ const foodSchema = new mongoose.Schema({
     required: true,
     type: idType,
   },
-  name: {
-    required: true,
-    type: String,
-  },
-  carbs: {
-    required: true,
-    type: Number,
-  },
-  protein: {
-    required: true,
-    type: Number,
-  },
-  fats: {
-    required: true,
-    type: Number,
-  },
+  foods: [
+    {
+      name: {
+        required: true,
+        type: String,
+      },
+      carbs: {
+        required: true,
+        type: Number,
+      },
+      protein: {
+        required: true,
+        type: Number,
+      },
+      fats: {
+        required: true,
+        type: Number,
+      },
+    },
+  ],
 });
 
 module.exports = mongoose.model("Food", foodSchema);

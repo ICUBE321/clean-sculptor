@@ -33,13 +33,20 @@ app.get("/", function (request, response) {
   response.json({ info: "Node.js, Express, and MongoDb API" });
 });
 
+// user endpoints
 app.get("/users", user.getUsers);
 app.get("/users/:id", user.getUserById);
 app.post("/users", user.createUser);
 app.put("/users/:id", user.updateUser);
 app.delete("/users/:id", user.deleteUser);
 
+// food endpoints
 app.get("/foods/:name", food.searchFood);
+//app.get("/foods", );
+app.get("/foods", food.getFoodList);
+app.post("/foods", food.saveFood);
+//app.put("/users/:id", user.updateUser);
+app.delete("/foods/#/?:userId&:foodId", food.deleteFood);
 
 app.listen(port, function () {
   console.log("App running on port ".concat(port, "."));
