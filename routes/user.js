@@ -1,5 +1,7 @@
 require("express");
 
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const UserModel = require("../models/usermodel");
 
 const getUsers = async (request, response) => {
@@ -21,12 +23,14 @@ const getUserById = async (request, response) => {
 };
 
 const createUser = async (request, response) => {
-  const user = new UserModel({
-    name: request.body.name,
-    email: request.body.email,
-  });
-
   try {
+    const hashedPassword = await bcrypt.hash(request.body.password, 10);
+    const user = new UserModel({
+      name: request.body.name,
+      email: request.body.email,
+      password: request.body.password,
+    });
+
     const userToSave = await user.save();
     response.status(200).json(userToSave);
   } catch (error) {
@@ -58,10 +62,40 @@ const deleteUser = async (request, response) => {
   }
 };
 
+const loginUser = async (request, response) => {
+  const email = request.body.email;
+  const password = request.body.password;
+
+  try {
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return response.status(401).json({ message: "Authentication failed" });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (password != user.password) {
+      return response.status(401).json({ message: "Invalid login" });
+    }
+
+    //use of tokens
+    const token = jwt.sign({ userId: user._id }, process.env.MY_SECRET, {
+      expiresIn: "1h",
+    });
+    // response.cookie("token", token, {
+    //   httpOnly: true,
+    // });
+    return response.status(200).json({ token });
+  } catch (error) {
+    response.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateUser,
   deleteUser,
+  loginUser,
 };
