@@ -1,6 +1,8 @@
 require("dotenv").config();
 const mongoString = process.env.ATLAS_URI;
 
+const path = require("path");
+
 const express = require("express");
 // Database connection starts
 const mongoose = require("mongoose");
@@ -18,6 +20,14 @@ database.once("connected", () => {
 
 const app = express();
 app.use(express.json());
+
+// Serve static files from the 'dist' directory
+app.use(express.static(path.join(__dirname, "../client/dist")));
+
+// Route for serving the login page
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+});
 
 // app.use(cooskieParser());
 
