@@ -12,32 +12,58 @@ const SearchFood = () => {
 
     // Here you can perform api call to get the meals info
     console.log("Food:", food);
-    edamamApiCall();
+    edamamApiCallFoodList();
     // You can also send the data to your backend server for authentication
   };
 
-  function edamamApiCall() {
+  // To get the list of related foods
+  function edamamApiCallFoodList() {
     let url = `https://api.edamam.com/api/food-database/v2/parser?app_id=0ac97a9d&app_key=37ae6336466c5bf7c4328965b8cab27d&ingr=${food}`;
     axios
       .get(url)
       .then((response) => {
         parseFoodResponse(response.data);
-        setFoodData(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
   }
 
+  // To get data on specific user-selected food
+  function edamamApiCallFoodData() {
+    let url =
+      "https://api.edamam.com/api/food-database/v2/nutrients?app_id=0ac97a9d&app_key=37ae6336466c5bf7c4328965b8cab27d";
+    axios.post(url, {});
+  }
+
+  //qualifiers: foodItem.measures[0].qualified[0]?.qualifiers[0]?.uri
+  // For parsing list of meals gotten in response
   function parseFoodResponse(foodResponse) {
-    let foodHintsResp = foodResponse.hints;
-    console.log(foodHintsResp);
-
-    for (let fooditem of foodHintsResp) {
-      console.log(fooditem.food);
-    }
-
-    console.log(foodHintsResp.length);
+    let parsedFoodList = foodResponse.hints.map((foodItem) => {
+      console.log(foodItem);
+      let qualifiers = "";
+      for (const qualified in foodItem.measures[0]) {
+        if (qualified === "qualified") {
+          qualifiers = new Array(
+            foodItem.measures[0].qualified[0].qualifiers[0].uri
+          );
+        }
+      }
+      return {
+        id: foodItem.food.foodId,
+        name: foodItem.food.label,
+        alias: foodItem.food.knownAs,
+        image: foodItem.food.image,
+        ingredients: new Array({
+          quantity: foodItem.measures[0].weight,
+          measureURI: foodItem.measures[0].uri,
+          qualifiers: qualifiers,
+          foodId: foodItem.food.foodId,
+        }),
+      };
+    });
+    console.log(parsedFoodList);
+    setFoodData(parsedFoodList);
   }
 
   return (
@@ -77,7 +103,30 @@ const SearchFood = () => {
           </div>
           <div>
             {foodData ? (
-              <div>{JSON.stringify(foodData)}</div>
+              <div className="bg-white">
+                <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+                  <h2 className="sr-only">Foods</h2>
+                  <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                    {foodData.map((foodItem) => (
+                      <a key={foodItem.id} href="" className="group">
+                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                          <img
+                            src={foodItem.image}
+                            alt={foodItem.alias}
+                            className="h-full w-full object-cover object-center group-hover:opacity-75"
+                          />
+                        </div>
+                        <h3 className="mt-4 text-sm text-gray-700">
+                          {foodItem.name}
+                        </h3>
+                        <p className="mt-1 text-lg font-medium text-gray-900">
+                          {}
+                        </p>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
             ) : (
               <div>Loading...</div>
             )}
