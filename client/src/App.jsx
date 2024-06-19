@@ -4,33 +4,19 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import Navbar from "./components/Navbar";
 import SearchPage from "./pages/SearchPage";
-
-// const router = (
-//   <Routes>
-//     <Route path="/" element={<LoginPage />} />
-//     <Route path="/signup" element={<SignupPage />} />
-//   </Routes>
-// );
-
-// createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <LoginPage />,
-//   },
-//   {
-//     path: "/signup",
-//     element: <SignupPage />,
-//   },
-// ]);
+import ListsPage from "./pages/ListsPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
-    <div className="flex">
+    <div className="">
       <Navbar />
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/home" element={<SearchPage />} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/lists" element={<ListsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </div>
   );
