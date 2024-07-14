@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const SignupPage = () => {
   return (
-    <div className="flex-1 bg-gray-100">
+    <div className="">
       <SignUp />
     </div>
   );
