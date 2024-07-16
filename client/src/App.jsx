@@ -9,7 +9,7 @@ import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
-    <div className="bg-beige">
+    <div className="bg-darkbg h-screen font-sans">
       <Navbar />
       <Routes>
         <Route path="/" element={<LoginPage />} />

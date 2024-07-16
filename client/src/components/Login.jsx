@@ -30,102 +30,48 @@ const Login = () => {
   // };
 
   return (
-    // <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    //   <div className="max-w-md w-full space-y-8">
-    //     <div>
-    //       <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-    //         Enter your kitchen
-    //       </h2>
-    //     </div>
-    //     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-    //       <div className="rounded-md shadow-sm -space-y-px">
-    //         <div>
-    //           <label htmlFor="email-address" className="sr-only">
-    //             Email address
-    //           </label>
-    //           <input
-    //             id="email-address"
-    //             name="email"
-    //             type="email"
-    //             autoComplete="email"
-    //             required
-    //             className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
-    //               emailError ? "border-red-500" : "border-gray-300"
-    //             } placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
-    //             placeholder="Email address"
-    //             value={email}
-    //             onChange={(e) => setEmail(e.target.value)}
-    //           />
-    //           {emailError && (
-    //             <p className="text-red-500 text-xs mt-1">{emailError}</p>
-    //           )}
-    //         </div>
-    //         <div>
-    //           <label htmlFor="password" className="sr-only">
-    //             Password
-    //           </label>
-    //           <input
-    //             id="password"
-    //             name="password"
-    //             type="password"
-    //             autoComplete="current-password"
-    //             required
-    //             className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-    //             placeholder="Password"
-    //             value={password}
-    //             onChange={(e) => setPassword(e.target.value)}
-    //           />
-    //         </div>
-    //       </div>
-
-    //       <div className="flex items-center justify-between">
-    //         <div className="flex items-center">
-    //           <input
-    //             id="remember-me"
-    //             name="remember-me"
-    //             type="checkbox"
-    //             className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-    //           />
-    //           <label
-    //             htmlFor="remember-me"
-    //             className="ml-2 block text-sm text-gray-900"
-    //           >
-    //             Remember me
-    //           </label>
-    //         </div>
-
-    //         <div className="text-sm">
-    //           <a
-    //             href="#"
-    //             className="font-medium text-indigo-600 hover:text-indigo-500"
-    //           >
-    //             Forgot your password?
-    //           </a>
-    //         </div>
-    //       </div>
-
-    //       <div>
-    //         <button
-    //           type="submit"
-    //           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-    //         >
-    //           Sign in
-    //         </button>
-    //       </div>
-    //     </form>
-    //   </div>
-    // </div>
     <div className="">
-      <h1>Enter your kitchen</h1>
-      <form action="">
-        <label for="email">Your email</label>
-        <input
-          type="email"
-          name=""
-          id="email"
-          placeholder="name@email.com"
-          required
-        />
+      <h1 className="text-5xl font-extrabold text-center dark:text-lightblue">
+        ENTER YOUR KITCHEN
+      </h1>
+      <form className="max-w-sm mx-auto">
+        <div className="mb-5">
+          <label
+            for="email"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+          >
+            Your email
+          </label>
+          <input
+            type="email"
+            name=""
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            id="email"
+            placeholder="name@email.com"
+            required
+          />
+        </div>
+        <div className="mb-5">
+          <label
+            for="password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+          >
+            Your password
+          </label>
+          <input
+            type="password"
+            name=""
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            id="password"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-blue-800"
+        >
+          SIGN IN
+        </button>
       </form>
     </div>
   );
