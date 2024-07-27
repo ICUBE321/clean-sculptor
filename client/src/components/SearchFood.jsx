@@ -2097,92 +2097,26 @@ const SearchFood = () => {
   // }
 
   return (
-    <div className="my-20">
-      <h1
-        htmlFor="default-search"
-        className="text-5xl font-extrabold text-center dark:text-lightblue mb-20"
-      >
-        WHAT'S THE NEXT MEAL?
-      </h1>
-      <form action="" className="mb-12">
-        <div className="relative">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg
-              className="w-4 h-4 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          </div>
-          <input
-            type="search"
-            id="default-search"
-            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search food item"
-            required
-          />
-          <button
-            type="submit"
-            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-lightblue font-medium rounded-lg text-sm px-4 py-2 dark:bg-darkbg dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-lightblue"
-          >
-            Find
-          </button>
-        </div>
-      </form>
-      <ul className="h-96 overflow-auto max-w-lg divide-y divide-gray-200 dark:divide-gray-700 mx-auto">
-        {tmpResponse1.hints.map((foodItem) => {
-          return (
-            <li
-              className="text-white p-3 sm:p-4 hover:bg-darkgray"
-              key={foodItem.food.foodId}
-              onClick={() => {
-                itemModal(foodItem);
-              }}
-            >
-              <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                <div className="flex-shrink-0">
-                  <img
-                    className="w-8 h-8 rounded-full"
-                    src={foodItem.food.image}
-                    alt={`${foodItem.food.knownAs} image`}
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                    {foodItem.food.label}
-                  </p>
-                  <ul className="text-sm dark:text-gray flex flex-wrap">
-                    <li className="mr-2">
-                      Protein: {foodItem.food.nutrients.PROCNT}g
-                    </li>
-                    <li className="mr-2">
-                      Carbs: {foodItem.food.nutrients.CHOCDF}g
-                    </li>
-                    <li className="mr-2">
-                      Fats: {foodItem.food.nutrients.FAT}g
-                    </li>
-                  </ul>
-                </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-lightblue font-medium rounded-lg text-sm px-4 py-2 dark:bg-darkbg dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-lightblue">
-                    ADD
-                  </button>
-                </div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    // <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    //   {selectedFood.id != "" ? (
+    //     <Item foodItem={selectedFood} />
+    //   ) : (
+    //     <div className="w-full max-w-4xl flex flex-col space-y-8">
+    //       <SearchForm
+    //         queriedFood={queriedFood}
+    //         submitHandler={handleSubmit}
+    //         searchFoodHandler={setQueriedFood}
+    //         className="flex-none"
+    //       />
+    //       <FoodList
+    //         foodList={foodData}
+    //         selectHandler={handleItemSelected}
+    //         className="flex-grow"
+    //       />
+    //     </div>
+    //   )}
+    // </div>
+    <div className=""></div>
   );
 };
 
