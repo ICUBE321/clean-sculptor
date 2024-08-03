@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import FoodList from "./FoodList";
 import Item from "./Item";
 import SearchForm from "./SearchForm";
+import { BrowserRouter as Router, Link, NavLink } from "react-router-dom"; // Import BrowserRouter and Link
 
 // foodData elements format:
 //id: foodItem.food.foodId,
@@ -2140,15 +2140,16 @@ const SearchFood = () => {
       </form>
       <ul className="h-96 overflow-auto max-w-lg divide-y divide-gray-200 dark:divide-gray-700 mx-auto">
         {tmpResponse1.hints.map((foodItem) => {
+          console.log(foodItem);
           return (
             <li
               className="text-white p-3 sm:p-4 hover:bg-darkgray"
               key={foodItem.food.foodId}
-              onClick={() => {
-                itemModal(foodItem);
-              }}
             >
-              <div className="flex items-center space-x-4 rtl:space-x-reverse">
+              <Link
+                to={"/item/" + foodItem.food.foodId}
+                className="flex items-center space-x-4 rtl:space-x-reverse"
+              >
                 <div className="flex-shrink-0">
                   <img
                     className="w-8 h-8 rounded-full"
@@ -2177,7 +2178,7 @@ const SearchFood = () => {
                     ADD ITEM
                   </button>
                 </div>
-              </div>
+              </Link>
             </li>
           );
         })}
