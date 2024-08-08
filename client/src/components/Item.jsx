@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Link, NavLink } from "react-router-dom"; // Import BrowserRouter and Link
 
 // selectedFood format:
 //id: foodItem.food.foodId,
@@ -26,7 +27,8 @@ const Item = () => {
 
   return (
     <div className="flex flex-row items-center w-full">
-      <button
+      <Link
+        to="/search"
         type="button"
         className="self-start text-darkblue bg-transparent hover:bg-darkblue hover:text-darkbg focus:ring-4 focus:outline-none focus:ring-transparent font-medium rounded-full text-lg p-2.5 text-center inline-flex items-center me-2"
       >
@@ -44,9 +46,9 @@ const Item = () => {
           />
         </svg>
         <span className="sr-only">Icon description</span>
-      </button>
+      </Link>
       <div className="grow flex flex-row p-10">
-        <div className="p-10">
+        <div className="p-10 w-1/3">
           <img
             className="w-full rounded-full"
             src={foodItem.image}
