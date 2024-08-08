@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import FoodList from "./FoodList";
+import FoodList from "./UserList";
 import Item from "./Item";
 import SearchForm from "./SearchForm";
 
@@ -2173,7 +2173,7 @@ const SearchFood = () => {
                   </ul>
                 </div>
                 <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-lightblue font-medium rounded-lg text-sm px-4 py-2 dark:bg-darkbg dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-lightblue">
+                  <button className="focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-darkbg text-gray hover:text-darkblue hover:bg-lightblue">
                     ADD ITEM
                   </button>
                 </div>
