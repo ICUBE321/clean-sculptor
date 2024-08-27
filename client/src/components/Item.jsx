@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Link, NavLink } from "react-router-dom"; // Import BrowserRouter and Link
 
 // selectedFood format:
 //id: foodItem.food.foodId,
@@ -11,118 +12,94 @@ import React, { useState } from "react";
 //   qualifiers: qualifiers,
 //   foodId: foodItem.food.foodId,
 
-const Item = ({ foodItem }) => {
+const Item = () => {
+  let foodItem = {
+    id: "food_bmyxrshbfao9s1amjrvhoauob6mo",
+    name: "Chicken",
+    alias: "chicken",
+    image:
+      "https://www.edamam.com/food-img/d33/d338229d774a743f7858f6764e095878.jpg",
+    protein: 18.6,
+    carbs: 0.0,
+    fats: 15.1,
+  };
   console.log(foodItem);
-  //console.log(foodItem.ingredients);
 
   return (
-    // <div className="max-w-md w-full space-y-8">
-    <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <a href="#">
-        <img
-          className="rounded-t-lg"
-          src={foodItem.image}
-          alt={foodItem.alias}
-        />
-      </a>
-      <div className="p-5">
-        <a href="#">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {foodItem.name}
-          </h5>
-        </a>
-
-        <button
-          id="dropdownDefaultButton"
-          data-dropdown-toggle="dropdown"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="button"
+    <div className="flex flex-row items-center w-full">
+      <Link
+        to="/search"
+        type="button"
+        className="self-start text-darkblue bg-transparent hover:bg-darkblue hover:text-darkbg focus:ring-4 focus:outline-none focus:ring-transparent font-medium rounded-full text-lg p-2.5 text-center inline-flex items-center me-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          className="bi bi-arrow-left"
+          viewBox="0 0 16 16"
         >
-          Unit{" "}
-          <svg
-            className="w-2.5 h-2.5 ms-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
-        </button>
-
-        <div
-          id="dropdown"
-          className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-        >
-          <ul
-            className="py-2 text-sm text-gray-700 dark:text-gray-200"
-            aria-labelledby="dropdownDefaultButton"
-          >
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Dashboard
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Settings
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Earnings
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Sign out
-              </a>
-            </li>
-          </ul>
+          <path
+            fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"
+          />
+        </svg>
+        <span className="sr-only">Icon description</span>
+      </Link>
+      <div className="grow flex flex-row p-10">
+        <div className="p-10 w-1/3">
+          <img
+            className="w-full rounded-full"
+            src={foodItem.image}
+            alt={foodItem.alias}
+          />
         </div>
-
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          Carbs: {foodItem.carbs}
-        </p>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          Protein: {foodItem.protein}
-        </p>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          Fats: {foodItem.fats}
-        </p>
-        <button
-          type="button"
-          class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-        >
-          Save
-        </button>
+        <div className="p-4 leading-normal w-full">
+          <h2 className="text-7xl font-bold dark:text-darkgray mb-5">
+            {foodItem.name}
+          </h2>
+          <div className="flex">
+            <p className="text-2xl dark:text-darkblue mr-5">
+              Protein: {foodItem.protein}g
+            </p>
+            <p className="text-2xl dark:text-darkblue mr-5">
+              Carbs: {foodItem.carbs}g
+            </p>
+            <p className="text-2xl dark:text-darkblue mr-5">
+              Fats: {foodItem.fats}g
+            </p>
+          </div>
+          <div className="mb-5">
+            <select
+              id="underline_select"
+              className="block py-2.5 px-0 w-1/5 text-sm text-darkblue bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+            >
+              <option selected>Choose a unit</option>
+              <option value="grams">g</option>
+              <option value="kilograms">kg</option>
+            </select>
+          </div>
+          <div className="text-darkblue">
+            <label htmlFor="number-input" className="text-sm mr-3">
+              Choose quantity:
+            </label>
+            <input
+              type="number"
+              name=""
+              id="number-input"
+              className="text-sm p-2 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0"
+            />
+          </div>
+        </div>
       </div>
+      <button
+        type="submit"
+        className="self-end text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-blue-800"
+      >
+        ADD ITEM
+      </button>
     </div>
-    // </div>
   );
 };
 
