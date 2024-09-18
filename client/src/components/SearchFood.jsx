@@ -3,6 +3,8 @@ import axios from "axios";
 import Item from "./Item";
 import SearchForm from "./SearchForm";
 import { BrowserRouter as Router, Link, NavLink } from "react-router-dom"; // Import BrowserRouter and Link
+import PickListModal from "./PickListModal";
+import NewListModal from "./NewListModal";
 
 // foodData elements format:
 //id: foodItem.food.foodId,
@@ -1962,6 +1964,18 @@ const SearchFood = () => {
     ],
   };
 
+  // for pick list modal
+  const [isPickListModalOpen, setIsPickListModalOpen] = useState(false);
+
+  const openPickListModal = () => setIsPickListModalOpen(true);
+  const closePickListModal = () => setIsPickListModalOpen(false);
+
+  // for new list modal
+  const [isNewListModalOpen, setIsNewListModalOpen] = useState(false);
+
+  const openNewListModal = () => setIsNewListModalOpen(true);
+  const closeNewListModal = () => setIsNewListModalOpen(false);
+
   // State variables to store user input and validation status
   // const [queriedFood, setQueriedFood] = useState(""); // user selected fod item
   // const [foodData, setFoodData] = useState(); // returned list of food items
@@ -2098,6 +2112,15 @@ const SearchFood = () => {
 
   return (
     <div className="my-20">
+      <PickListModal
+        isOpen={isPickListModalOpen}
+        closeModal={closePickListModal}
+        createList={openNewListModal}
+      />
+      <NewListModal
+        isOpen={isNewListModalOpen}
+        closeModal={closeNewListModal}
+      />
       <h1
         htmlFor="default-search"
         className="text-5xl font-extrabold text-center dark:text-lightblue mb-20"
@@ -2174,7 +2197,14 @@ const SearchFood = () => {
                   </ul>
                 </div>
                 <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  <button className="focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-darkbg text-gray hover:text-darkblue hover:bg-lightblue">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      openPickListModal();
+                      console.log(`Modal is ${isPickListModalOpen}`);
+                    }}
+                    className="focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-darkbg text-gray hover:text-darkblue hover:bg-lightblue"
+                  >
                     ADD ITEM
                   </button>
                 </div>
