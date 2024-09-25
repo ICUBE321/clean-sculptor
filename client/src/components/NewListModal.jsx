@@ -3,13 +3,23 @@ import React from "react";
 const NewListModal = ({ isOpen, closeModal }) => {
   if (!isOpen) return null;
 
+  const checkAndCloseModal = (event) => {
+    if (event.target.id == "outer-modal") closeModal();
+  };
+
   return (
-    <div className="overflow-y-auto overflow-x-hidden fixed right-0 left-0 z-50 bg-darkbg/75 w-full">
-      <div className="justify-center items-center bg-darkbg rounded-lg p-10 w-max mx-auto max-h-full">
+    <div
+      className="flex justify-center items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 bg-darkbg/75 w-full h-full"
+      id="outer-modal"
+      onClick={(event) => {
+        checkAndCloseModal(event);
+      }}
+    >
+      <div className="bg-darkbg rounded-lg p-10 h-fit w-5/12 border-2 border-darkgray">
         <form className="max-w-sm mx-10 bg-darkbg p-10">
           <div className="mb-5">
             <label
-              for="name"
+              htmlFor="name"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
             >
               List Name
@@ -25,7 +35,7 @@ const NewListModal = ({ isOpen, closeModal }) => {
           </div>
           <div className="mb-5">
             <label
-              for="calories"
+              htmlFor="calories"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
             >
               Amount of Calories
