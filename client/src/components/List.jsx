@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const List = () => {
@@ -1947,6 +1947,15 @@ const List = () => {
       },
     ],
   };
+
+  let currentList = {
+    id: 1,
+    name: "Bulk List",
+    calories: 2000,
+  };
+
+  const [isModifying, setIsModifying] = useState(false);
+
   return (
     <div className="my-20 w-3/5">
       <div className="flex justify-between">
@@ -1971,18 +1980,30 @@ const List = () => {
         </Link>
         <button
           type=""
-          className="self-end text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-blue-800"
+          onClick={() =>
+            isModifying ? setIsModifying(false) : setIsModifying(true)
+          }
+          className="self-end border font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue focus:ring-blue-800"
         >
-          MODIFY
+          {isModifying ? "SAVE" : "MODIFY"}
         </button>
       </div>
-
       <div className="flex flex-col items-center mb-20">
-        <h1 className="grow text-5xl font-extrabold text-center dark:text-lightblue">
-          BULK LIST
-        </h1>
+        {isModifying ? (
+          <input
+            type="text"
+            name=""
+            id=""
+            placeholder={currentList.name.toUpperCase()}
+            className="grow text-5xl font-extrabold text-center text-lightblue bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0"
+          />
+        ) : (
+          <h1 className="grow text-5xl font-extrabold text-center text-darkblue">
+            {currentList.name.toUpperCase()}
+          </h1>
+        )}
         <form action="" className="w-full">
-          <div className="flex mt-5 items-center justify-center">
+          <div className="flex mt-10 items-center justify-center">
             <label htmlFor="list_calories" className="text-gray mr-3">
               List Calories:
             </label>
@@ -1990,9 +2011,11 @@ const List = () => {
               type="number"
               name=""
               id="list_calories"
-              disabled
-              value={2000}
-              className="max-w-20 p-2 text-sm text-center rounded-lg bg-darkgray placeholder-gray-400 text-white focus:ring-blue-500"
+              disabled={!isModifying}
+              value={currentList.calories}
+              className={`${
+                isModifying ? "text-lightblue" : "text-darkblue"
+              } text-sm p-2 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0`}
             />
           </div>
         </form>
@@ -2001,33 +2024,80 @@ const List = () => {
         {tmpResponse1.hints.map((foodItem) => {
           return (
             <li
-              className="text-white p-4 hover:bg-darkgray"
+              className={`text-white p-4 ${
+                isModifying ? "" : "hover:bg-darkgray"
+              }`}
               key={foodItem.food.foodId}
             >
-              <Link
-                to={"/list-item/" + foodItem.food.foodId}
-                className="flex items-center justify-center space-x-4 rtl:space-x-reverse"
-              >
-                <div className="flex-shrink-0">
-                  <img
-                    className="w-8 h-8 rounded-full"
-                    src={foodItem.food.image}
-                    alt={`${foodItem.food.knownAs} image`}
-                  />
+              {isModifying ? (
+                <div className="flex items-center justify-center space-x-4 rtl:space-x-reverse">
+                  <div className="flex-shrink-0">
+                    <img
+                      className="w-8 h-8 rounded-full"
+                      src={foodItem.food.image}
+                      alt={`${foodItem.food.knownAs} image`}
+                    />
+                  </div>
+                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                    {foodItem.food.label}
+                  </p>
+                  <ul className="text-sm dark:text-gray flex-1 flex flex-wrap justify-end">
+                    <li className="mr-2">
+                      Protein: {foodItem.food.nutrients.PROCNT}g
+                    </li>
+                    <li className="mr-2">
+                      Carbs: {foodItem.food.nutrients.CHOCDF}g
+                    </li>
+                    <li className="mr-2">
+                      Fats: {foodItem.food.nutrients.FAT}g
+                    </li>
+                  </ul>
+                  <button>
+                    <svg
+                      className="w-6 h-6 text-red-400 hover:text-red-600"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
                 </div>
-                <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                  {foodItem.food.label}
-                </p>
-                <ul className="text-sm dark:text-gray flex-1 flex flex-wrap justify-end">
-                  <li className="mr-2">
-                    Protein: {foodItem.food.nutrients.PROCNT}g
-                  </li>
-                  <li className="mr-2">
-                    Carbs: {foodItem.food.nutrients.CHOCDF}g
-                  </li>
-                  <li className="mr-2">Fats: {foodItem.food.nutrients.FAT}g</li>
-                </ul>
-              </Link>
+              ) : (
+                <Link
+                  to={"/list-item/" + foodItem.food.foodId}
+                  className="flex items-center justify-center space-x-4 rtl:space-x-reverse"
+                >
+                  <div className="flex-shrink-0">
+                    <img
+                      className="w-8 h-8 rounded-full"
+                      src={foodItem.food.image}
+                      alt={`${foodItem.food.knownAs} image`}
+                    />
+                  </div>
+                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                    {foodItem.food.label}
+                  </p>
+                  <ul className="text-sm dark:text-gray flex-1 flex flex-wrap justify-end">
+                    <li className="mr-2">
+                      Protein: {foodItem.food.nutrients.PROCNT}g
+                    </li>
+                    <li className="mr-2">
+                      Carbs: {foodItem.food.nutrients.CHOCDF}g
+                    </li>
+                    <li className="mr-2">
+                      Fats: {foodItem.food.nutrients.FAT}g
+                    </li>
+                  </ul>
+                </Link>
+              )}
             </li>
           );
         })}
