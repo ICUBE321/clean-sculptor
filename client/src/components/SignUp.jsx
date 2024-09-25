@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SignUpForm = () => {
+const SignUp = () => {
   // State variables to store user input
   // const [name, setName] = useState("");
   // const [email, setEmail] = useState("");
@@ -32,78 +32,85 @@ const SignUpForm = () => {
   // };
 
   return (
-    // <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    //   <div className="max-w-md w-full space-y-8">
-    //     <div>
-    //       <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-    //         Join the sculptors
-    //       </h2>
-    //     </div>
-    //     <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-    //       <div className="rounded-md shadow-sm -space-y-px">
-    //         <div>
-    //           <label htmlFor="name" className="sr-only">
-    //             Name
-    //           </label>
-    //           <input
-    //             id="name"
-    //             name="name"
-    //             type="text"
-    //             autoComplete="name"
-    //             required
-    //             className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-    //             placeholder="Name"
-    //             value={name}
-    //             onChange={(e) => setName(e.target.value)}
-    //           />
-    //         </div>
-    //         <div>
-    //           <label htmlFor="email" className="sr-only">
-    //             Email address
-    //           </label>
-    //           <input
-    //             id="email"
-    //             name="email"
-    //             type="email"
-    //             autoComplete="email"
-    //             required
-    //             className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-    //             placeholder="Email address"
-    //             value={email}
-    //             onChange={(e) => setEmail(e.target.value)}
-    //           />
-    //         </div>
-    //         <div>
-    //           <label htmlFor="password" className="sr-only">
-    //             Password
-    //           </label>
-    //           <input
-    //             id="password"
-    //             name="password"
-    //             type="password"
-    //             autoComplete="new-password"
-    //             required
-    //             className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-    //             placeholder="Password"
-    //             value={password}
-    //             onChange={(e) => setPassword(e.target.value)}
-    //           />
-    //         </div>
-    //       </div>
-
-    //       <div>
-    //         <button
-    //           type="submit"
-    //           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-    //         >
-    //           Sign up
-    //         </button>
-    //       </div>
-    //     </form>
-    //   </div>
-    // </div>
-    <div className=""></div>
+    <div className="my-20">
+      <h1 className="text-5xl font-extrabold text-center dark:text-lightblue mb-20">
+        JOIN THE SCULPTORS
+      </h1>
+      <form className="max-w-sm mx-auto">
+        <div className="mb-5 flex justify-between">
+          <div className="">
+            <label
+              for="first_name"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+            >
+              First Name
+            </label>
+            <input
+              type="text"
+              name=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              id="first_name"
+              placeholder="John"
+              required
+            />
+          </div>
+          <div className="">
+            <label
+              for="last_name"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+            >
+              Last Name
+            </label>
+            <input
+              type="text"
+              name=""
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              id="last_name"
+              placeholder="Doe"
+              required
+            />
+          </div>
+        </div>
+        <div className="mb-5">
+          <label
+            for="email"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+          >
+            Your email
+          </label>
+          <input
+            type="email"
+            name=""
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            id="email"
+            placeholder="name@email.com"
+            required
+          />
+        </div>
+        <div className="mb-5">
+          <label
+            for="password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+          >
+            Your password
+          </label>
+          <input
+            type="password"
+            name=""
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            id="password"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
+        >
+          SIGN UP
+        </button>
+      </form>
+    </div>
   );
 };
 
-export default SignUpForm;
+export default SignUp;
