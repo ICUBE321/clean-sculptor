@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import BrowserRouter and Link
 import NewListModal from "./NewListModal";
 
-const UserList = ({}) => {
+const UserLists = ({}) => {
   let foodLists = [
     {
       id: 1,
@@ -42,7 +42,10 @@ const UserList = ({}) => {
               className="text-white p-3 sm:p-4 hover:bg-darkgray"
               key={list.id}
             >
-              <div className="flex items-center space-x-4 rtl:space-x-reverse">
+              <Link
+                to={"/list/" + list.id}
+                className="flex items-center space-x-4 rtl:space-x-reverse"
+              >
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate text-white">
                     {list.name}
@@ -58,7 +61,7 @@ const UserList = ({}) => {
                     DELETE
                   </button>
                 </div>
-              </div>
+              </Link>
             </li>
           );
         })}
@@ -67,4 +70,4 @@ const UserList = ({}) => {
   );
 };
 
-export default UserList;
+export default UserLists;

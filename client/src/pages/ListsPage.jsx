@@ -1,11 +1,11 @@
 import Login from "../components/Login";
 import { Link } from "react-router-dom";
-import UserList from "../components/UserList";
+import UserLists from "../components/UserLists";
 
 const ListsPage = () => {
   return (
     <div className="max-w-full mx-auto flex justify-center items-center">
-      <UserList />
+      <UserLists />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import SearchPage from "./pages/SearchPage";
 import ListsPage from "./pages/ListsPage";
 import ProfilePage from "./pages/ProfilePage";
 import ItemPage from "./pages/ItemPage";
+import ListPage from "./pages/ListPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/item/:id" element={<ItemPage />} />
         <Route path="/lists" element={<ListsPage />} />
+        <Route path="/list/:id" element={<ListPage />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </div>
