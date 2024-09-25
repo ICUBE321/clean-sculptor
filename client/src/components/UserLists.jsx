@@ -52,11 +52,6 @@ const UserLists = ({}) => {
                   </p>
                 </div>
                 <div className="inline-flex items-center text-base font-semibold">
-                  <button className="focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-darkbg text-gray hover:text-darkblue hover:bg-lightblue">
-                    MODIFY
-                  </button>
-                </div>
-                <div className="inline-flex items-center text-base font-semibold">
                   <button className="focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-darkbg text-red-400 hover:text-white hover:bg-red-400">
                     DELETE
                   </button>
