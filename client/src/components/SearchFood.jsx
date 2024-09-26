@@ -2171,6 +2171,7 @@ const SearchFood = () => {
             >
               <Link
                 to={"/item/" + foodItem.food.foodId}
+                state={{ openMode: "search" }}
                 className="flex items-center space-x-4 rtl:space-x-reverse"
               >
                 <div className="flex-shrink-0">

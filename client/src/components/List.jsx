@@ -2072,7 +2072,8 @@ const List = () => {
                 </div>
               ) : (
                 <Link
-                  to={"/list-item/" + foodItem.food.foodId}
+                  to={"/item/" + foodItem.food.foodId}
+                  state={{ openMode: "list-item", listId: currentList.id }}
                   className="flex items-center justify-center space-x-4 rtl:space-x-reverse"
                 >
                   <div className="flex-shrink-0">
