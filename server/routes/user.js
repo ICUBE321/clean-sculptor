@@ -70,11 +70,13 @@ const loginUser = async (request, response) => {
     const user = await UserModel.findOne({ email });
 
     if (!user) {
+      console.log(`Authentication failed - invalid user ${email}`);
       return response.status(401).json({ message: "Authentication failed" });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (password != user.password) {
+      console.log(`Authentication failed - invalid password ${password}`);
       return response.status(401).json({ message: "Invalid login" });
     }
 
@@ -85,6 +87,7 @@ const loginUser = async (request, response) => {
     // response.cookie("token", token, {
     //   httpOnly: true,
     // });
+    console.log("Valid login");
     return response.status(200).json({ token });
   } catch (error) {
     response.status(500).json({ message: error.message });

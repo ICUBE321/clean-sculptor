@@ -1,33 +1,60 @@
 import React, { useState } from "react";
+import { redirect, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
+import axios from "axios";
 
-const Login = () => {
+const Login = ({ setToken }) => {
   // State variables to store user input and validation status
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [emailError, setEmailError] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const location = useLocation();
+  console.log(
+    `Pathname: ${location.pathname} and Query string: ${location.search}`
+  );
 
   // Function to handle form submission
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Check if the email is valid before submitting the form
-  //   if (!validateEmail(email)) {
-  //     setEmailError("Please enter a valid email address");
-  //     return;
-  //   }
-  // Reset email error if validation succeeds
-  // setEmailError("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Check if the email is valid before submitting the form
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+    //Reset email error if validation succeeds
+    setEmailError("");
 
-  // Here you can perform further validation and submit the form
-  // console.log("Email:", email);
-  // console.log("Password:", password);
-  // You can also send the data to your backend server for authentication
-  //};
+    // Here you can perform further validation and submit the form
+    console.log("Email:", email);
+    console.log("Password:", password);
+    //You can also send the data to your backend server for authentication
+    const token = await loginUser({
+      email,
+      password,
+    });
+  };
+
+  async function loginUser(credentials) {
+    axios
+      .post("http://localhost:3000/login", {
+        email: credentials.email,
+        password: credentials.password,
+      })
+      .then(function (response) {
+        console.log(response.data.token);
+        setToken(response.data.token);
+        location.pathname == "/" && redirect("/search");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   // Function to validate email using regular expression
-  // const validateEmail = (email) => {
-  //   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   return regex.test(email);
-  // };
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
   return (
     <div className="my-20">
@@ -45,6 +72,8 @@ const Login = () => {
           <input
             type="email"
             name=""
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="email"
             placeholder="name@email.com"
@@ -61,6 +90,8 @@ const Login = () => {
           <input
             type="password"
             name=""
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="password"
             required
@@ -68,6 +99,7 @@ const Login = () => {
         </div>
         <button
           type="submit"
+          onClick={handleSubmit}
           className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
         >
           SIGN IN
