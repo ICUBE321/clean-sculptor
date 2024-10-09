@@ -10,7 +10,17 @@ import ItemPage from "./pages/ItemPage";
 import ListPage from "./pages/ListPage";
 
 function App() {
-  const [token, setToken] = useState();
+  //converting to use session storage over memory
+  const setToken = (userToken) => {
+    sessionStorage.setItem("token", JSON.stringify(userToken));
+  };
+  const getToken = () => {
+    const tokenString = sessionStorage.getItem("token");
+    const userToken = JSON.parse(tokenString);
+    return userToken?.token;
+  };
+
+  const token = getToken();
 
   return (
     <div className="bg-darkbg h-screen font-sans">
