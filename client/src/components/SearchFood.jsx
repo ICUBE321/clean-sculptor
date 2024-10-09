@@ -2163,7 +2163,6 @@ const SearchFood = () => {
       </form>
       <ul className="h-96 overflow-auto max-w-lg divide-y divide-gray-200 dark:divide-gray-700 mx-auto">
         {tmpResponse1.hints.map((foodItem) => {
-          console.log(foodItem);
           return (
             <li
               className="text-white p-3 sm:p-4 hover:bg-darkgray"
@@ -2202,7 +2201,6 @@ const SearchFood = () => {
                     onClick={(e) => {
                       e.preventDefault();
                       openPickListModal();
-                      console.log(`Modal is ${isPickListModalOpen}`);
                     }}
                     className="focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-darkbg text-gray hover:text-darkblue hover:bg-lightblue"
                   >

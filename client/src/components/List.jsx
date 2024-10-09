@@ -2025,7 +2025,7 @@ const List = () => {
           return (
             <li
               className={`text-white p-4 ${
-                isModifying ? "" : "hover:bg-darkgray"
+                !isModifying && "hover:bg-darkgray"
               }`}
               key={foodItem.food.foodId}
             >

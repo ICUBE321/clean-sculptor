@@ -30,7 +30,6 @@ const Item = () => {
     carbs: 0.0,
     fats: 15.1,
   };
-  console.log(foodItem);
 
   // grabbing the open mode
   const location = useLocation();
@@ -72,7 +71,7 @@ const Item = () => {
             />
           </svg>
         </Link>
-        {openMode == "list-item" ? (
+        {openMode == "list-item" && (
           <button
             type=""
             onClick={() =>
@@ -82,8 +81,6 @@ const Item = () => {
           >
             {isModifying ? "SAVE" : "MODIFY"}
           </button>
-        ) : (
-          <div></div>
         )}
       </div>
       <div className="flex flex-row items-center w-full">
