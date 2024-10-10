@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { redirect, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
 import axios from "axios";
 
 const Login = ({ setToken }) => {
@@ -8,10 +6,6 @@ const Login = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
-  const location = useLocation();
-  console.log(
-    `Pathname: ${location.pathname} and Query string: ${location.search}`
-  );
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
@@ -43,7 +37,6 @@ const Login = ({ setToken }) => {
       .then(function (response) {
         console.log(response.data.token);
         setToken(response.data.token);
-        location.pathname == "/" && redirect("/search");
       })
       .catch(function (error) {
         console.log(error);
@@ -64,7 +57,7 @@ const Login = ({ setToken }) => {
       <form className="max-w-sm mx-auto">
         <div className="mb-5">
           <label
-            for="email"
+            htmlFor="email"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
           >
             Your email
@@ -82,7 +75,7 @@ const Login = ({ setToken }) => {
         </div>
         <div className="mb-5">
           <label
-            for="password"
+            htmlFor="password"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
           >
             Your password
