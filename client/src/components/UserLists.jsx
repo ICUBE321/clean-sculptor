@@ -24,7 +24,7 @@ const UserLists = ({}) => {
   return (
     <div className={`my-20 w-3/5 ${isModalOpen && "bg-darkbg"}`}>
       <div className="flex items-center mb-20">
-        <h1 className="grow text-5xl font-extrabold text-center dark:text-lightblue">
+        <h1 className="grow text-5xl font-extrabold text-center text-lightblue">
           YOUR LISTS
         </h1>
         <button
