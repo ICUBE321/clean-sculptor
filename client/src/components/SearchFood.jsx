@@ -2125,7 +2125,7 @@ const SearchFood = () => {
         htmlFor="default-search"
         className="text-5xl font-extrabold text-center dark:text-lightblue mb-20"
       >
-        WHAT'S THE NEXT MEAL?
+        WHAT&apos;S THE NEXT MEAL?
       </h1>
       <form action="" className="mb-12">
         <div className="relative">

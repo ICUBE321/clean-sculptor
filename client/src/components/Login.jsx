@@ -6,6 +6,7 @@ const Login = ({ setToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
@@ -51,14 +52,14 @@ const Login = ({ setToken }) => {
 
   return (
     <div className="my-20">
-      <h1 className="text-5xl font-extrabold text-center dark:text-lightblue mb-20">
+      <h1 className="text-5xl font-extrabold text-center text-lightblue mb-20">
         ENTER YOUR KITCHEN
       </h1>
       <form className="max-w-sm mx-auto">
         <div className="mb-5">
           <label
             htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+            className="block mb-2 text-sm font-medium text-gray-900 text-gray"
           >
             Your email
           </label>
@@ -76,19 +77,44 @@ const Login = ({ setToken }) => {
         <div className="mb-5">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+            className="block mb-2 text-sm font-medium text-gray-900 text-gray"
           >
             Your password
           </label>
-          <input
+          {/* <input
             type="password"
             name=""
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="password"
+            placeholder="Please enter your password"
             required
-          />
+          /> */}
+            
+            <input 
+              id="password" 
+              type={showPassword ? 'text' : 'password'} 
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+              placeholder="Enter current password"  
+            />
+
+            {/* Checkbox */}
+            <div className="flex mt-4">
+              <input 
+                id="password" 
+                type="checkbox" 
+                className="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" 
+                onChange={() => setShowPassword(!showPassword)} 
+              />
+              <label 
+                htmlFor="hs-toggle-password-checkbox" 
+                className="block ms-3 text-sm font-medium text-gray-900 text-gray"
+              >
+                Show password
+              </label>
+            </div>
+
         </div>
         <button
           type="submit"
