@@ -2161,6 +2161,7 @@ const SearchFood = () => {
           </button>
         </div>
       </form>
+      {/* https://dev.to/derick1530/how-to-create-scrollable-element-in-tailwind-without-a-scrollbar-4mbd <- scrollbar info */}
       <ul className="h-96 overflow-auto max-w-lg divide-y divide-gray-200 dark:divide-gray-700 mx-auto no-scrollbar">
         {tmpResponse1.hints.map((foodItem) => {
           return (
