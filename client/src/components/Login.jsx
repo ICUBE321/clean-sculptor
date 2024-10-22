@@ -94,9 +94,13 @@ const Login = ({ setToken }) => {
             
             <input 
               id="password" 
+              name=""
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               type={showPassword ? 'text' : 'password'} 
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
               placeholder="Enter current password"  
+              required
             />
 
             {/* Checkbox */}
@@ -108,7 +112,7 @@ const Login = ({ setToken }) => {
                 onChange={() => setShowPassword(!showPassword)} 
               />
               <label 
-                htmlFor="hs-toggle-password-checkbox" 
+                htmlFor="password" 
                 className="block ms-3 text-sm font-medium text-gray-900 text-gray"
               >
                 Show password
