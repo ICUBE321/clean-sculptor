@@ -2123,7 +2123,7 @@ const SearchFood = () => {
       />
       <h1
         htmlFor="default-search"
-        className="text-5xl font-extrabold text-center dark:text-lightblue mb-20"
+        className="text-5xl font-extrabold text-center text-lightblue mb-20"
       >
         WHAT&apos;S THE NEXT MEAL?
       </h1>
@@ -2161,7 +2161,7 @@ const SearchFood = () => {
           </button>
         </div>
       </form>
-      <ul className="h-96 overflow-auto max-w-lg divide-y divide-gray-200 dark:divide-gray-700 mx-auto">
+      <ul className="h-96 overflow-auto max-w-lg divide-y divide-gray-200 dark:divide-gray-700 mx-auto no-scrollbar">
         {tmpResponse1.hints.map((foodItem) => {
           return (
             <li
