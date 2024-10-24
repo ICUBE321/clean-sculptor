@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mongoString = process.env.ATLAS_URI;
 
-const path = require("path");
+// const path = require("path");
 
 const express = require("express");
 // Database connection starts
@@ -22,18 +22,26 @@ const app = express();
 app.use(express.json());
 
 // Serve static files from the 'dist' directory
-app.use(express.static(path.join(__dirname, "../client/dist")));
+// app.use(express.static(path.join(__dirname, "../client/dist")));
 
 // Route for serving the login page
-app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
-});
+// app.get("/login", (req, res) => {
+// res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+// });
 
 // app.use(cooskieParser());
 
 const user = require("./routes/user");
 const food = require("./routes/food");
 const port = 3000;
+
+// cors middleware
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 //Error handling middleware
 app.use((err, req, res, next) => {
