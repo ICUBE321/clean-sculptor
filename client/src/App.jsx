@@ -19,14 +19,14 @@ function App() {
       <Navbar />
       {!token ? (
         location.pathname == "/signup" ? (
-          <SignupPage />
+          <SignupPage setToken={setToken} />
         ) : (
           <LoginPage setToken={setToken} />
         )
       ) : (
         <Routes>
           <Route path="login" element={<LoginPage setToken={setToken} />} />
-          <Route path="signup" element={<SignupPage />} />
+          <Route path="signup" element={<SignupPage setToken={setToken} />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="item/:id" element={<ItemPage />} />
           <Route path="lists" element={<ListsPage />} />

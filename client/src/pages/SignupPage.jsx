@@ -1,10 +1,10 @@
 import SignUp from "../components/SignUp";
 import { Link } from "react-router-dom";
 
-const SignupPage = () => {
+const SignupPage = ({ setToken }) => {
   return (
     <div className="">
-      <SignUp />
+      <SignUp setToken={setToken} />
     </div>
   );
 };
