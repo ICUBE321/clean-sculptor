@@ -19,7 +19,7 @@ const useToken = () => {
   const saveToken = (userToken) => {
     localStorage.setItem("token", JSON.stringify(userToken));
     setToken(userToken.token);
-    console.log("saveToken function called");
+    console.log("token added");
     if (location.pathname == "/login" || location.pathname == "/signup") {
       navigate("search");
     } else {
@@ -27,7 +27,13 @@ const useToken = () => {
     }
   };
 
-  return { setToken: saveToken, token: getToken() };
+  const removeToken = () => {
+    localStorage.removeItem("token");
+    console.log("token removed");
+    navigate("login");
+  };
+
+  return { setToken: saveToken, token: getToken(), removeToken: removeToken };
 };
 
 export default useToken;
