@@ -6,7 +6,6 @@ const Logout = ({ removeToken }) => {
 
   const logout = () => {
     removeToken();
-    console.log("User logged out");
   };
 
   return (
