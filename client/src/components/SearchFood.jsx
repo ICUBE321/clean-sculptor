@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Item from "./Item";
-import SearchForm from "./SearchForm";
 import { BrowserRouter as Router, Link, NavLink } from "react-router-dom"; // Import BrowserRouter and Link
 import PickListModal from "./PickListModal";
 import NewListModal from "./NewListModal";

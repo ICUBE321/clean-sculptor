@@ -9,9 +9,10 @@ import ProfilePage from "./pages/ProfilePage";
 import ItemPage from "./pages/ItemPage";
 import ListPage from "./pages/ListPage";
 import useToken from "./hooks/useToken";
+import LogoutPage from "./pages/LogoutPage";
 
 function App() {
-  const { token, setToken } = useToken();
+  const { token, setToken, removeToken } = useToken();
   let location = useLocation();
   console.log(`pathname: ${location.pathname}`);
   return (
@@ -32,6 +33,10 @@ function App() {
           <Route path="lists" element={<ListsPage />} />
           <Route path="list/:id" element={<ListPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route
+            path="logout"
+            element={<LogoutPage removeToken={removeToken} />}
+          />
         </Routes>
       )}
     </div>
