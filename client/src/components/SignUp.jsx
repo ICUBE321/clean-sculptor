@@ -1,35 +1,58 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-const SignUp = () => {
-  // State variables to store user input
-  // const [name, setName] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+const SignUp = ({ setToken }) => {
+  //State variables to store user input
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
 
-  // // Function to handle form submission
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Here you can perform validation before submitting the form
-  //   // Check if the email is valid before submitting the form
-  //   if (!validateEmail(email)) {
-  //     setEmailError("Please enter a valid email address");
-  //     return;
-  //   }
-  //   // Reset email error if validation succeeds
-  //   setEmailError("");
+  // Function to handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Here you can perform validation before submitting the form
+    // Check if the email is valid before submitting the form
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+    // Reset email error if validation succeeds
+    setEmailError("");
 
-  //   // For simplicity, let's just log the user input for now
-  //   console.log("Name:", name);
-  //   console.log("Email:", email);
-  //   console.log("Password:", password);
-  //   // You can also send the data to your backend server for processing
-  // };
+    // For simplicity, let's just log the user input for now
+    console.log("Name:", name);
+    console.log("Email:", email);
+    console.log("Password:", password);
+    // You can also send the data to your backend server for processing
+    const token = await createUser({
+      name,
+      email,
+      password,
+    });
+  };
 
-  // Function to validate email using regular expression
-  // const validateEmail = (email) => {
-  //   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   return regex.test(email);
-  // };
+  async function createUser(credentials) {
+    axios
+      .post("http://localhost:3000/users", {
+        name: credentials.name,
+        email: credentials.email,
+        password: credentials.password,
+      })
+      .then(function (response) {
+        console.log(response.data.token);
+        setToken(response.data.token);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  //Function to validate email using regular expression
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
   return (
     <div className="my-20">
@@ -37,43 +60,29 @@ const SignUp = () => {
         JOIN THE SCULPTORS
       </h1>
       <form className="max-w-sm mx-auto">
-        <div className="mb-5 flex justify-between">
-          <div className="">
+        <div className="mb-5">
+          <div className="mb-5">
             <label
-              for="first_name"
+              htmlFor="name"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
             >
-              First Name
+              Your name
             </label>
             <input
               type="text"
               name=""
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id="first_name"
+              id="name"
               placeholder="John"
-              required
-            />
-          </div>
-          <div className="">
-            <label
-              for="last_name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
-            >
-              Last Name
-            </label>
-            <input
-              type="text"
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id="last_name"
-              placeholder="Doe"
               required
             />
           </div>
         </div>
         <div className="mb-5">
           <label
-            for="email"
+            htmlFor="email"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
           >
             Your email
@@ -81,6 +90,8 @@ const SignUp = () => {
           <input
             type="email"
             name=""
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="email"
             placeholder="name@email.com"
@@ -89,7 +100,7 @@ const SignUp = () => {
         </div>
         <div className="mb-5">
           <label
-            for="password"
+            htmlFor="password"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
           >
             Your password
@@ -97,6 +108,8 @@ const SignUp = () => {
           <input
             type="password"
             name=""
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="password"
             required
@@ -104,6 +117,7 @@ const SignUp = () => {
         </div>
         <button
           type="submit"
+          onClick={handleSubmit}
           className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
         >
           SIGN UP

@@ -32,7 +32,12 @@ const createUser = async (request, response) => {
     });
 
     const userToSave = await user.save();
-    response.status(200).json(userToSave);
+    //use of tokens
+    const token = jwt.sign({ userId: user._id }, process.env.MY_SECRET, {
+      expiresIn: "1h",
+    });
+    console.log("Valid sign up");
+    response.status(200).json({ userToSave, token });
   } catch (error) {
     response.status(400).json({ message: error.message });
   }
