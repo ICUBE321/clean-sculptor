@@ -19,8 +19,6 @@ const Login = ({ setToken }) => {
     setEmailError("");
 
     // Here you can perform further validation and submit the form
-    console.log("Email:", email);
-    console.log("Password:", password);
     //You can also send the data to your backend server for authentication
     const token = await loginUser({
       email,
@@ -35,12 +33,9 @@ const Login = ({ setToken }) => {
         password: credentials.password,
       })
       .then(function (response) {
-        console.log(response.data.token);
         setToken(response.data.token);
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .catch(function (error) {});
   }
 
   // Function to validate email using regular expression

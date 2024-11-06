@@ -21,9 +21,6 @@ const SignUp = ({ setToken }) => {
     setEmailError("");
 
     // For simplicity, let's just log the user input for now
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Password:", password);
     // You can also send the data to your backend server for processing
     const token = await createUser({
       name,
@@ -40,12 +37,9 @@ const SignUp = ({ setToken }) => {
         password: credentials.password,
       })
       .then(function (response) {
-        console.log(response.data.token);
         setToken(response.data.token);
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .catch(function (error) {});
   }
 
   //Function to validate email using regular expression
