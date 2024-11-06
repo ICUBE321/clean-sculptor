@@ -119,7 +119,7 @@ const SignUp = ({ setToken }) => {
           onClick={handleSubmit}
           className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
         >
-          SIGN UPs
+          SIGN UP
         </button>
       </form>
     </div>
