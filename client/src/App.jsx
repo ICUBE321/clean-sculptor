@@ -16,7 +16,7 @@ function App() {
   let location = useLocation();
   return (
     <div className="bg-darkbg h-screen font-sans">
-      <Navbar />
+      <Navbar tokenExists={token} />
       {!token ? (
         location.pathname == "/signup" ? (
           <SignupPage setToken={setToken} />

@@ -30,6 +30,7 @@ const useToken = () => {
   const removeToken = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+
     navigate("login");
   };
 

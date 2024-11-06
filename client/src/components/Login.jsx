@@ -33,9 +33,7 @@ const Login = ({ setToken }) => {
       .then(function (response) {
         setToken(response.data.token, response.data.user._id);
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .catch(function (error) {});
   }
 
   // Function to validate email using regular expression
