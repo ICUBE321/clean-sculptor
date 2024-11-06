@@ -14,7 +14,6 @@ import LogoutPage from "./pages/LogoutPage";
 function App() {
   const { token, setToken, removeToken } = useToken();
   let location = useLocation();
-  console.log(`pathname: ${location.pathname}`);
   return (
     <div className="bg-darkbg h-screen font-sans">
       <Navbar />

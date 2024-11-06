@@ -5,21 +5,20 @@ const useToken = () => {
   const navigate = useNavigate();
   let location = useLocation();
 
+  // retrieve token from local storage for validation
   const getToken = () => {
     const tokenString = localStorage.getItem("token");
-    console.log(`token string: ${tokenString}`);
     const userToken = JSON.parse(tokenString);
-    console.log("getToken function called");
-    console.log(userToken);
     return userToken;
   };
 
   const [token, setToken] = useState(getToken());
 
-  const saveToken = (userToken) => {
+  // save the token and user id to the local storage
+  const saveToken = (userToken, userId) => {
     localStorage.setItem("token", JSON.stringify(userToken));
+    localStorage.setItem("userId", JSON.stringify(userId));
     setToken(userToken.token);
-    console.log("token added");
     if (location.pathname == "/login" || location.pathname == "/signup") {
       navigate("search");
     } else {
@@ -27,9 +26,10 @@ const useToken = () => {
     }
   };
 
+  // delete token and user id from local storage
   const removeToken = () => {
     localStorage.removeItem("token");
-    console.log("token removed");
+    localStorage.removeItem("userId");
     navigate("login");
   };
 

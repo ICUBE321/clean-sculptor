@@ -1,31 +1,14 @@
 const mongoose = require("mongoose");
 const idType = mongoose.Schema.Types.ObjectId;
 
+const foodListShema = require("../models/foodListModel");
+
 const foodSchema = new mongoose.Schema({
   userId: {
     required: true,
     type: idType,
   },
-  foods: [
-    {
-      name: {
-        required: true,
-        type: String,
-      },
-      carbs: {
-        required: true,
-        type: Number,
-      },
-      protein: {
-        required: true,
-        type: Number,
-      },
-      fats: {
-        required: true,
-        type: Number,
-      },
-    },
-  ],
+  foodLists: [{ type: foodListShema }],
 });
 
 module.exports = mongoose.model("Food", foodSchema);

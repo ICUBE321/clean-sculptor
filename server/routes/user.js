@@ -37,7 +37,7 @@ const createUser = async (request, response) => {
       expiresIn: "1h",
     });
     console.log("Valid sign up");
-    response.status(200).json({ userToSave, token });
+    response.status(200).json({ user: userToSave, token });
   } catch (error) {
     response.status(400).json({ message: error.message });
   }
@@ -93,7 +93,7 @@ const loginUser = async (request, response) => {
     //   httpOnly: true,
     // });
     console.log("Valid login");
-    return response.status(200).json({ token });
+    return response.status(200).json({ user, token });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }

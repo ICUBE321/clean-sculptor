@@ -62,10 +62,12 @@ app.put("/users/:id", user.updateUser);
 app.delete("/users/:id", user.deleteUser);
 
 // food endpoints
-app.get("/foods/:name", food.searchFood);
+// app.get("/foods/:name", food.searchFood);
 //app.get("/foods", );
+app.get("/foods/all", food.getAllFoodLists);
 app.get("/foods", food.getFoodList);
-app.post("/foods", food.saveFood);
+// app.post("/foods", food.saveFood);
+app.post("/foods", food.saveFoodList);
 //app.put("/users/:id", user.updateUser);
 app.delete("/foods", food.deleteFood);
 

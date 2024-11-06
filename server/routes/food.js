@@ -1,7 +1,8 @@
 require("express");
 
 const { options } = require("nodemon/lib/config");
-const FoodModel = require("../models/foodmodel");
+const FoodListModel = require("../models/foodListModel");
+const foodListModel = require("../models/foodListModel");
 
 const searchFood = (request, response) => {
   //logic to query food database api for an item
@@ -15,14 +16,70 @@ const searchFood = (request, response) => {
   });
 };
 
-const getFoodList = async (request, response) => {
+// to retrieve all the user's food lists
+const getAllFoodLists = async (request, response) => {
   const userId = request.query.userId;
   try {
-    const foodList = await FoodModel.where("userId").equals(userId);
-    // console.log(`user id searched for is ${userId}. Food found is ${foodList}`);
-    response.json(foodList);
+    const allFoodLists = await FoodListModel.find({ userId: userId });
+    response.json(allFoodLists);
   } catch (error) {
     response.status(500).json({ message: error.message });
+  }
+};
+
+// to retrieve a user's specific food list
+const getFoodList = async (request, response) => {
+  const userId = request.query.userId;
+  const listName = request.query.listName;
+  try {
+    const foodList = await FoodListModel.findOne({
+      userId: userId,
+      listName: listName,
+    });
+
+    if (foodList) {
+      response.json(foodList);
+    } else {
+      // found nothing
+      response.status(400).json({ message: "This list does not exist" });
+    }
+  } catch (error) {
+    response.status(500).json({ message: error.message });
+  }
+};
+
+// to save a new foodlist
+const saveFoodList = async (request, response) => {
+  const userId = request.body.userId;
+  const listName = request.body.listName;
+  let listExists = await FoodListModel.exists({
+    userId: userId,
+    listName: listName,
+  });
+  if (listExists) {
+    // return to the user a message saying the list name already exists
+    response.status(400).json({ message: "This list name is already in use." });
+  } else {
+    //create a new list object and save it
+    let newFoodList = new foodListModel({
+      userId: userId,
+      listName: listName,
+      foods: [
+        {
+          name: request.body.foods[0].name,
+          carbs: request.body.foods[0].carbs,
+          protein: request.body.foods[0].protein,
+          fats: request.body.foods[0].fats,
+        },
+      ],
+    });
+
+    try {
+      const listToSave = await newFoodList.save();
+      response.status(200).json(listToSave);
+    } catch (error) {
+      response.status(400).json({ message: error.message });
+    }
   }
 };
 
@@ -85,7 +142,9 @@ const deleteFood = async (request, response) => {
 
 module.exports = {
   searchFood,
+  getAllFoodLists,
   getFoodList,
+  saveFoodList,
   saveFood,
   deleteFood,
 };

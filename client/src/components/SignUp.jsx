@@ -40,8 +40,7 @@ const SignUp = ({ setToken }) => {
         password: credentials.password,
       })
       .then(function (response) {
-        console.log(response.data.token);
-        setToken(response.data.token);
+        setToken(response.data.token, response.data.user._id);
       })
       .catch(function (error) {
         console.log(error);
