@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
-const NewListModal = ({ isOpen, closeModal }) => {
+const NewListModal = ({
+  isOpen,
+  closeModal,
+  openPickList,
+  shouldOpenPickList,
+}) => {
   if (!isOpen) return null;
+
+  const [listName, setListName] = useState("");
+  const [listCalories, setListCalories] = useState("");
+  let userId = JSON.parse(localStorage.getItem("userId"));
 
   const checkAndCloseModal = (event) => {
     if (event.target.id == "outer-modal") closeModal();
+  };
+
+  const createNewList = () => {
+    axios
+      .post("http://localhost:3000/foodlist", {
+        userId: userId,
+        listName: listName,
+      })
+      .then(function (response) {
+        console.log(response);
+        shouldOpenPickList && openPickList();
+        closeModal();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
@@ -31,6 +57,8 @@ const NewListModal = ({ isOpen, closeModal }) => {
               id="name"
               placeholder="Bulk list"
               required
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
             />
           </div>
           <div className="mb-5">
@@ -46,11 +74,16 @@ const NewListModal = ({ isOpen, closeModal }) => {
               name=""
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               id="calories"
+              value={listCalories}
+              onChange={(e) => setListCalories(e.target.value)}
             />
           </div>
           <button
-            type="submit"
             className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
+            onClick={(event) => {
+              shouldOpenPickList && event.preventDefault();
+              createNewList();
+            }}
           >
             CREATE LIST
           </button>

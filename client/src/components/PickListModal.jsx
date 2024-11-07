@@ -1,19 +1,40 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 const PickListModal = ({ isOpen, closeModal, createList }) => {
   if (!isOpen) return null;
-  let foodLists = [
-    {
-      id: 1,
-      name: "Bulk List",
-    },
-    {
-      id: 2,
-      name: "Cut List",
-    },
-    { id: 3, name: "Keto List" },
-    { id: 4, name: "Fried rice Ingredients" },
-  ];
+
+  const [foodLists, setFoodLists] = useState(null);
+  const hasInitialized = useRef(false); // A ref to check if initialization has occurred
+  let userId = JSON.parse(localStorage.getItem("userId"));
+
+  useEffect(() => {
+    if (!hasInitialized.current) {
+      retrieveAllFoodLists();
+      hasInitialized.current = true; // Mark as initialized
+    }
+  }, []);
+
+  // call function to retrieve all user food lists when the page is opened
+  const retrieveAllFoodLists = () => {
+    axios
+      .get(`http://localhost:3000/foodlist/all?userId=${userId}`)
+      .then(function (response) {
+        let tmpList = [];
+        if (response.data) {
+          tmpList = response.data.map((foodList) => {
+            return {
+              id: foodList._id,
+              name: foodList.listName,
+            };
+          });
+        }
+        setFoodLists(tmpList);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const checkAndCloseModal = (event) => {
     if (event.target.id == "outer-modal") closeModal();
@@ -29,7 +50,7 @@ const PickListModal = ({ isOpen, closeModal, createList }) => {
     >
       <div className="bg-darkbg rounded-lg p-10 h-fit w-5/12 border-2 border-darkgray">
         <ul className="h-96 overflow-auto w-full divide-y divide-gray-200 dark:divide-gray-700">
-          {foodLists.map((list) => {
+          {foodLists?.map((list) => {
             return (
               <li
                 className="text-white p-3 sm:p-4 hover:bg-darkgray"
@@ -51,6 +72,7 @@ const PickListModal = ({ isOpen, closeModal, createList }) => {
           className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
           onClick={() => {
             createList();
+            closeModal();
           }}
         >
           CREATE LIST

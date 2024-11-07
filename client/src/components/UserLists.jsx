@@ -18,7 +18,7 @@ const UserLists = ({}) => {
   // call function to retrieve all user food lists when the page is opened
   const retrieveAllFoodLists = () => {
     axios
-      .get(`http://localhost:3000/foods/all?userId=${userId}`)
+      .get(`http://localhost:3000/foodlist/all?userId=${userId}`)
       .then(function (response) {
         let tmpList = [];
         if (response.data) {
@@ -54,7 +54,12 @@ const UserLists = ({}) => {
           NEW LIST
         </button>
       </div>
-      <NewListModal isOpen={isModalOpen} closeModal={closeModal} />
+      <NewListModal
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        openPickList={() => {}}
+        shouldOpenPickList={false}
+      />
       <ul className="h-96 overflow-auto w-full divide-y divide-gray-200 dark:divide-gray-700">
         {foodLists?.map((list) => {
           return (
