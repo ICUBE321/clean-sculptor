@@ -64,14 +64,7 @@ const saveFoodList = async (request, response) => {
     let newFoodList = new foodListModel({
       userId: userId,
       listName: listName,
-      foods: [
-        {
-          name: request.body.foods[0].name,
-          carbs: request.body.foods[0].carbs,
-          protein: request.body.foods[0].protein,
-          fats: request.body.foods[0].fats,
-        },
-      ],
+      foods: [],
     });
 
     try {

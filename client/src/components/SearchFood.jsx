@@ -2119,6 +2119,8 @@ const SearchFood = () => {
       <NewListModal
         isOpen={isNewListModalOpen}
         closeModal={closeNewListModal}
+        openPickList={openPickListModal}
+        shouldOpenPickList={true}
       />
       <h1
         htmlFor="default-search"
