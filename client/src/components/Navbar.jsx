@@ -72,8 +72,7 @@ const Navbar = ({ tokenExists }) => {
                   let style = isActive
                     ? "text-darkblue hover:text-darkblue"
                     : "text-lightblue md:hover:text-darkblue md:hover:bg-transparent hover:text-white hover:bg-transparent";
-                  style +=
-                    " block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0";
+                  style += " block py-2 px-3 rounded md:p-0";
                   return style;
                 }}
               >
@@ -87,8 +86,7 @@ const Navbar = ({ tokenExists }) => {
                   let style = isActive
                     ? "text-darkblue hover:text-darkblue"
                     : "text-lightblue md:hover:text-darkblue md:hover:bg-transparent hover:text-white hover:bg-transparent";
-                  style +=
-                    " block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0";
+                  style += " block py-2 px-3 rounded md:p-0";
                   return style;
                 }}
               >
@@ -102,8 +100,7 @@ const Navbar = ({ tokenExists }) => {
                   let style = isActive
                     ? "text-darkblue hover:text-darkblue"
                     : "text-lightblue md:hover:text-darkblue md:hover:bg-transparent hover:text-white hover:bg-transparent";
-                  style +=
-                    " block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0";
+                  style += " block py-2 px-3 rounded md:p-0";
                   return style;
                 }}
               >
@@ -117,8 +114,7 @@ const Navbar = ({ tokenExists }) => {
                   let style = isActive
                     ? "text-darkblue hover:text-darkblue"
                     : "text-lightblue md:hover:text-darkblue md:hover:bg-transparent hover:text-white hover:bg-transparent";
-                  style +=
-                    " block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0";
+                  style += " block py-2 px-3 rounded md:p-0";
                   return style;
                 }}
               >
