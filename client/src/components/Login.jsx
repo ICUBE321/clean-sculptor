@@ -44,14 +44,14 @@ const Login = ({ setToken }) => {
 
   return (
     <div className="my-20">
-      <h1 className="text-5xl font-extrabold text-center dark:text-lightblue mb-20">
+      <h1 className="text-5xl font-extrabold text-center text-lightblue mb-20">
         ENTER YOUR KITCHEN
       </h1>
       <form className="max-w-sm mx-auto">
         <div className="mb-5">
           <label
             htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+            className="block mb-2 text-sm font-medium text-gray"
           >
             Your email
           </label>
@@ -60,7 +60,7 @@ const Login = ({ setToken }) => {
             name=""
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="border text-sm rounded-lg block w-full p-2.5 bg-darkgray border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
             id="email"
             placeholder="name@email.com"
             required
@@ -69,7 +69,7 @@ const Login = ({ setToken }) => {
         <div className="mb-5">
           <label
             htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+            className="block mb-2 text-sm font-medium text-gray"
           >
             Your password
           </label>
@@ -78,7 +78,7 @@ const Login = ({ setToken }) => {
             name=""
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="text-sm rounded-lg block w-full p-2.5 bg-darkgray border border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
             id="password"
             required
           />

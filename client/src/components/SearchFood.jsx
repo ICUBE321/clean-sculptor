@@ -2122,7 +2122,7 @@ const SearchFood = () => {
       />
       <h1
         htmlFor="default-search"
-        className="text-5xl font-extrabold text-center dark:text-lightblue mb-20"
+        className="text-5xl font-extrabold text-center text-lightblue mb-20"
       >
         WHAT'S THE NEXT MEAL?
       </h1>
@@ -2130,7 +2130,7 @@ const SearchFood = () => {
         <div className="relative">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg
-              className="w-4 h-4 text-gray-500 dark:text-gray-400"
+              className="w-4 h-4 text-gray-400"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -2148,19 +2148,19 @@ const SearchFood = () => {
           <input
             type="search"
             id="default-search"
-            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-full p-4 ps-10 text-sm border rounded-lg bg-darkgray border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
             placeholder="Search food item"
             required
           />
           <button
             type="submit"
-            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-lightblue font-medium rounded-lg text-sm px-4 py-2 dark:bg-darkbg dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-lightblue"
+            className="text-white absolute end-2.5 bottom-2.5 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-darkbg border-lightblue text-gray hover:text-darkblue hover:bg-lightblue focus:ring-lightblue"
           >
             Find
           </button>
         </div>
       </form>
-      <ul className="h-96 overflow-auto max-w-lg divide-y divide-gray-200 dark:divide-gray-700 mx-auto">
+      <ul className="h-96 overflow-auto max-w-lg divide-y divide-gray-700 mx-auto">
         {tmpResponse1.hints.map((foodItem) => {
           return (
             <li
@@ -2180,10 +2180,10 @@ const SearchFood = () => {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                  <p className="text-sm font-medium truncate text-white">
                     {foodItem.food.label}
                   </p>
-                  <ul className="text-sm dark:text-gray flex flex-wrap">
+                  <ul className="text-sm text-gray flex flex-wrap">
                     <li className="mr-2">
                       Protein: {foodItem.food.nutrients.PROCNT}g
                     </li>
@@ -2195,7 +2195,7 @@ const SearchFood = () => {
                     </li>
                   </ul>
                 </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                <div className="inline-flex items-center text-base font-semibold text-white">
                   <button
                     onClick={(e) => {
                       e.preventDefault();

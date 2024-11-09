@@ -102,24 +102,24 @@ const Item = () => {
             />
           </div>
           <div className="p-4 leading-normal w-full">
-            <h2 className="text-7xl font-bold dark:text-darkgray mb-5">
+            <h2 className="text-7xl font-bold text-darkgray mb-5">
               {foodItem.name}
             </h2>
             <div className="flex">
-              <p className="text-2xl dark:text-darkblue mr-5">
+              <p className="text-2xl text-darkblue mr-5">
                 Protein: {foodItem.protein}g
               </p>
-              <p className="text-2xl dark:text-darkblue mr-5">
+              <p className="text-2xl text-darkblue mr-5">
                 Carbs: {foodItem.carbs}g
               </p>
-              <p className="text-2xl dark:text-darkblue mr-5">
+              <p className="text-2xl text-darkblue mr-5">
                 Fats: {foodItem.fats}g
               </p>
             </div>
             <div className="mb-5">
               <select
                 id="underline_select"
-                className="block py-2.5 px-0 w-1/5 text-sm text-darkblue bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                className="block py-2.5 px-0 w-1/5 text-sm text-darkblue bg-transparent border-0 border-b-2 border-gray-200 appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer"
               >
                 <option defaultChecked>Choose a unit</option>
                 <option value="grams">g</option>
@@ -150,7 +150,7 @@ const Item = () => {
               e.preventDefault();
               openPickListModal();
             }}
-            className="self-end text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-blue-800"
+            className="self-end border focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
           >
             ADD ITEM
           </button>

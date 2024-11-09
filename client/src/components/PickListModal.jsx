@@ -28,7 +28,7 @@ const PickListModal = ({ isOpen, closeModal, createList }) => {
       }}
     >
       <div className="bg-darkbg rounded-lg p-10 h-fit w-5/12 border-2 border-darkgray">
-        <ul className="h-96 overflow-auto w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <ul className="h-96 overflow-auto w-full divide-y divide-gray-700">
           {foodLists.map((list) => {
             return (
               <li

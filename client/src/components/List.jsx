@@ -2020,7 +2020,7 @@ const List = () => {
           </div>
         </form>
       </div>
-      <ul className="h-96 overflow-auto w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <ul className="h-96 overflow-auto w-full divide-y divide-gray-700">
         {tmpResponse1.hints.map((foodItem) => {
           return (
             <li
@@ -2038,10 +2038,10 @@ const List = () => {
                       alt={`${foodItem.food.knownAs} image`}
                     />
                   </div>
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                  <p className="text-sm font-medium truncate text-white">
                     {foodItem.food.label}
                   </p>
-                  <ul className="text-sm dark:text-gray flex-1 flex flex-wrap justify-end">
+                  <ul className="text-sm text-gray flex-1 flex flex-wrap justify-end">
                     <li className="mr-2">
                       Protein: {foodItem.food.nutrients.PROCNT}g
                     </li>
@@ -2083,10 +2083,10 @@ const List = () => {
                       alt={`${foodItem.food.knownAs} image`}
                     />
                   </div>
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                  <p className="text-sm font-medium truncate text-white">
                     {foodItem.food.label}
                   </p>
-                  <ul className="text-sm dark:text-gray flex-1 flex flex-wrap justify-end">
+                  <ul className="text-sm text-gray flex-1 flex flex-wrap justify-end">
                     <li className="mr-2">
                       Protein: {foodItem.food.nutrients.PROCNT}g
                     </li>
