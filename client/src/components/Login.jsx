@@ -26,7 +26,7 @@ const Login = ({ setToken }) => {
 
   async function loginUser(credentials) {
     axios
-      .post("http://localhost:3000/login", {
+      .post("/api/login", {
         email: credentials.email,
         password: credentials.password,
       })
