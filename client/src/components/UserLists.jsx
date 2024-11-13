@@ -18,7 +18,7 @@ const UserLists = ({}) => {
   // call function to retrieve all user food lists when the page is opened
   const retrieveAllFoodLists = () => {
     axios
-      .get(`http://localhost:3000/foods/all?userId=${userId}`)
+      .get(`/api/foods/all?userId=${userId}`)
       .then(function (response) {
         let tmpList = [];
         if (response.data) {
