@@ -31,7 +31,7 @@ const SignUp = ({ setToken }) => {
 
   async function createUser(credentials) {
     axios
-      .post("/api/users", {
+      .post("/users", {
         name: credentials.name,
         email: credentials.email,
         password: credentials.password,

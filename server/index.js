@@ -21,18 +21,10 @@ database.once("connected", () => {
 const app = express();
 app.use(express.json());
 
-// Serve static files from the 'dist' directory
-// app.use(express.static(path.join(__dirname, "../client/dist")));
-
-// Route for serving the login page
-// app.get("/login", (req, res) => {
-// res.sendFile(path.join(__dirname, "../client/dist/index.html"));
-// });
-
 // app.use(cooskieParser());
 
-const user = require("../routes/user");
-const food = require("../routes/food");
+const user = require("./routes/user");
+const food = require("./routes/food");
 const port = 3000;
 
 // cors middleware
@@ -49,27 +41,27 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal Server Error");
 });
 
-app.get("/api", function (request, response) {
+app.get("/", function (request, response) {
   response.json({ info: "Node.js, Express, and MongoDb API" });
 });
 
 // user endpoints
-app.post("/api/login", user.loginUser);
-app.get("/api/users", user.getUsers);
-app.get("/api/users/:id", user.getUserById);
-app.post("/api/users", user.createUser);
-app.put("/api/users/:id", user.updateUser);
-app.delete("/api/users/:id", user.deleteUser);
+app.post("/login", user.loginUser);
+app.get("/users", user.getUsers);
+app.get("/users/:id", user.getUserById);
+app.post("/users", user.createUser);
+app.put("/users/:id", user.updateUser);
+app.delete("/users/:id", user.deleteUser);
 
 // food endpoints
 // app.get("/foods/:name", food.searchFood);
 //app.get("/foods", );
-app.get("/api/foods/all", food.getAllFoodLists);
-app.get("/api/foods", food.getFoodList);
+app.get("/foods/all", food.getAllFoodLists);
+app.get("/foods", food.getFoodList);
 // app.post("/foods", food.saveFood);
-app.post("/api/foods", food.saveFoodList);
+app.post("/foods", food.saveFoodList);
 //app.put("/users/:id", user.updateUser);
-app.delete("/api/foods", food.deleteFood);
+app.delete("/foods", food.deleteFood);
 
 app.listen(port, function () {
   console.log("App running on port ".concat(port, "."));

@@ -26,7 +26,7 @@ const Login = ({ setToken }) => {
 
   async function loginUser(credentials) {
     axios
-      .post("/api/login", {
+      .post("/login", {
         email: credentials.email,
         password: credentials.password,
       })
