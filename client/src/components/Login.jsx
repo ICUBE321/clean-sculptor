@@ -17,6 +17,7 @@ const Login = ({ setToken }) => {
     }
     //Reset email error if validation succeeds
     setEmailError("");
+    console.log(`URL: ${import.meta.env.VITE_API_BASE_URL}/login`);
     //You can also send the data to your backend server for authentication
     const token = await loginUser({
       email,
