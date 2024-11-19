@@ -4,6 +4,7 @@ const mongoString = process.env.ATLAS_URI;
 // const path = require("path");
 
 const express = require("express");
+const cors = require("cors");
 // Database connection starts
 const mongoose = require("mongoose");
 mongoose.connect(mongoString);
@@ -27,13 +28,30 @@ const user = require("./routes/user");
 const food = require("./routes/food");
 const port = process.env.PORT;
 
-// cors middleware
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
+// CORS configuration
+const allowedOrigins = [
+  "http://localhost:3000", // Backend testing
+  "http://localhost:5173", // Frontend development
+  "https://clean-sculptor-client.vercel.app", // Deployed client
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true, // Enable this if cookies are involved
+  })
+);
+
+// Preflight request handler
+app.options("*", cors());
 
 //Error handling middleware
 app.use((err, req, res, next) => {
@@ -63,6 +81,7 @@ app.post("/foods", food.saveFoodList);
 //app.put("/users/:id", user.updateUser);
 app.delete("/foods", food.deleteFood);
 
-app.listen(port, function () {
-  console.log("App running on port ".concat(port, "."));
+// Start the server
+app.listen(port, () => {
+  console.log(`App running on port ${port}.`);
 });
