@@ -31,7 +31,7 @@ const SignUp = ({ setToken }) => {
 
   async function createUser(credentials) {
     axios
-      .post("/users", {
+      .post(`${import.meta.env.VITE_API_BASE_URL}/users`, {
         name: credentials.name,
         email: credentials.email,
         password: credentials.password,

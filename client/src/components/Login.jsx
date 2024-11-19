@@ -17,6 +17,7 @@ const Login = ({ setToken }) => {
     }
     //Reset email error if validation succeeds
     setEmailError("");
+    console.log(`URL: ${import.meta.env.VITE_API_BASE_URL}/login`);
     //You can also send the data to your backend server for authentication
     const token = await loginUser({
       email,
@@ -26,7 +27,7 @@ const Login = ({ setToken }) => {
 
   async function loginUser(credentials) {
     axios
-      .post("/login", {
+      .post(`${import.meta.env.VITE_API_BASE_URL}/login`, {
         email: credentials.email,
         password: credentials.password,
       })
