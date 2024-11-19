@@ -1,8 +1,6 @@
 require("dotenv").config();
 const mongoString = process.env.ATLAS_URI;
 
-// const path = require("path");
-
 const express = require("express");
 const cors = require("cors");
 // Database connection starts
@@ -28,30 +26,13 @@ const user = require("./routes/user");
 const food = require("./routes/food");
 const port = process.env.PORT;
 
-// CORS configuration
-const allowedOrigins = [
-  "http://localhost:3000", // Backend testing
-  "http://localhost:5173", // Frontend development
-  "https://clean-sculptor-client.vercel.app", // Deployed client
-];
+//define the CORS options
+const corsOptions = {
+  credentials: true,
+  origin: [process.env.SERVER_DOMAIN, process.env.CLIENT_DOMAIN], //the whitelisted domains
+};
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
-    credentials: true, // Enable this if cookies are involved
-  })
-);
-
-// Preflight request handler
-app.options("*", cors());
+app.use(cors(corsOptions));
 
 //Error handling middleware
 app.use((err, req, res, next) => {
