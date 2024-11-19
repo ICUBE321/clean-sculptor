@@ -25,7 +25,7 @@ app.use(express.json());
 
 const user = require("./routes/user");
 const food = require("./routes/food");
-const port = 3000;
+const port = process.env.PORT;
 
 // cors middleware
 app.use((req, res, next) => {
