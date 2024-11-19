@@ -26,7 +26,7 @@ const Login = ({ setToken }) => {
 
   async function loginUser(credentials) {
     axios
-      .post("/login", {
+      .post(`${import.meta.env.VITE_API_BASE_URL}/login`, {
         email: credentials.email,
         password: credentials.password,
       })
