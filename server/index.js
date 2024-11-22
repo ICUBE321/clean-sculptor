@@ -30,8 +30,11 @@ const port = process.env.PORT;
 const corsOptions = {
   credentials: true,
   origin: [process.env.SERVER_DOMAIN, process.env.CLIENT_DOMAIN], //the whitelisted domains
+  methods: "GET,POST,PUT,DELETE", // Allow only these methods
+  allowedHeaders: ["Content-Type", "Authorization"], // Allow only these headers
 };
 
+// Use CORS middleware with specified options
 app.use(cors(corsOptions));
 
 //Error handling middleware
