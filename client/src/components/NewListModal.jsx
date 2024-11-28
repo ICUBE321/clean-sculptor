@@ -20,14 +20,14 @@ const NewListModal = ({ isOpen, closeModal }) => {
           <div className="mb-5">
             <label
               htmlFor="name"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+              className="block mb-2 text-sm font-medium text-gray"
             >
               List Name
             </label>
             <input
               type="text"
               name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="border text-sm rounded-lg block w-full p-2.5 bg-darkgray border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
               id="name"
               placeholder="Bulk list"
               required
@@ -36,7 +36,7 @@ const NewListModal = ({ isOpen, closeModal }) => {
           <div className="mb-5">
             <label
               htmlFor="calories"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray"
+              className="block mb-2 text-sm font-medium text-gray"
             >
               Amount of Calories
             </label>
@@ -44,7 +44,7 @@ const NewListModal = ({ isOpen, closeModal }) => {
               type="number"
               min={0}
               name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className="border text-sm rounded-lg block w-full p-2.5 bg-darkgray border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
               id="calories"
             />
           </div>
