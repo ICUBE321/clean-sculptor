@@ -1,7 +1,7 @@
 require("express");
+const { matchedData } = require("express-validator");
 
 const { options } = require("nodemon/lib/config");
-const FoodListModel = require("../models/foodListModel");
 const foodListModel = require("../models/foodListModel");
 
 const searchFood = (request, response) => {
@@ -20,7 +20,7 @@ const searchFood = (request, response) => {
 const getAllFoodLists = async (request, response) => {
   const userId = request.query.userId;
   try {
-    const allFoodLists = await FoodListModel.find({ userId: userId });
+    const allFoodLists = await foodListModel.find({ userId: userId });
     response.json(allFoodLists);
   } catch (error) {
     response.status(500).json({ message: error.message });
@@ -32,7 +32,7 @@ const getFoodList = async (request, response) => {
   const userId = request.query.userId;
   const listName = request.query.listName;
   try {
-    const foodList = await FoodListModel.findOne({
+    const foodList = await foodListModel.findOne({
       userId: userId,
       listName: listName,
     });
@@ -50,9 +50,10 @@ const getFoodList = async (request, response) => {
 
 // to save a new foodlist
 const saveFoodList = async (request, response) => {
-  const userId = request.body.userId;
-  const listName = request.body.listName;
-  let listExists = await FoodListModel.exists({
+  const validData = matchedData(request);
+  const userId = validData.userId;
+  const listName = validData.listName;
+  let listExists = await foodListModel.exists({
     userId: userId,
     listName: listName,
   });
@@ -66,10 +67,10 @@ const saveFoodList = async (request, response) => {
       listName: listName,
       foods: [
         {
-          name: request.body.foods[0].name,
-          carbs: request.body.foods[0].carbs,
-          protein: request.body.foods[0].protein,
-          fats: request.body.foods[0].fats,
+          name: validData.foods[0].name,
+          carbs: validData.foods[0].carbs,
+          protein: validData.foods[0].protein,
+          fats: validData.foods[0].fats,
         },
       ],
     });
@@ -84,8 +85,9 @@ const saveFoodList = async (request, response) => {
 };
 
 const saveFood = async (request, response) => {
+  const validData = matchedData(request);
   // find the food document using user id
-  const userId = request.body.userId;
+  const userId = validData.userId;
   const foodId = await FoodModel.exists({ userId: userId });
   console.log(`does food id for user id ${userId} is: ${foodId}`);
   // and if it exists
@@ -95,10 +97,10 @@ const saveFood = async (request, response) => {
       userId: userId,
       foods: [
         {
-          name: request.body.name,
-          carbs: request.body.carbs,
-          protein: request.body.protein,
-          fats: request.body.fats,
+          name: validData.name,
+          carbs: validData.carbs,
+          protein: validData.protein,
+          fats: validData.fats,
         },
       ],
     });
@@ -112,10 +114,10 @@ const saveFood = async (request, response) => {
   } else {
     // append new food item to the foods list, else create new doc
     let foodItem = {
-      name: request.body.name,
-      carbs: request.body.carbs,
-      protein: request.body.protein,
-      fats: request.body.fats,
+      name: validData.name,
+      carbs: validData.carbs,
+      protein: validData.protein,
+      fats: validData.fats,
     };
 
     try {
