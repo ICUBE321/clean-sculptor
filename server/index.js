@@ -24,6 +24,19 @@ app.use(express.json());
 
 const user = require("./routes/user");
 const food = require("./routes/food");
+
+const {
+  createUserValidation,
+  loginUserValidation,
+  userIdValidation,
+} = require("./middleware/validators/userValidator");
+
+const {
+  saveFoodValidation,
+  getFoodsValidation,
+  deleteFoodValidation,
+} = require("./middleware/validators/foodValidator");
+
 const port = process.env.PORT;
 
 //define the CORS options
@@ -45,22 +58,22 @@ app.get("/", function (request, response) {
 });
 
 // user endpoints
-app.post("/login", user.loginUser);
+app.post("/login", loginUserValidation, user.loginUser);
 app.get("/users", user.getUsers);
-app.get("/users/:id", user.getUserById);
-app.post("/users", user.createUser);
-app.put("/users/:id", user.updateUser);
-app.delete("/users/:id", user.deleteUser);
+app.get("/users/:id", userIdValidation, user.getUserById);
+app.post("/users", createUserValidation, user.createUser);
+app.put("/users/:id", userIdValidation, user.updateUser);
+app.delete("/users/:id", userIdValidation, user.deleteUser);
 
 // food endpoints
 // app.get("/foods/:name", food.searchFood);
 //app.get("/foods", );
-app.get("/foods/all", food.getAllFoodLists);
-app.get("/foods", food.getFoodList);
+app.get("/foods/all", getFoodsValidation, food.getAllFoodLists);
+app.get("/foods", getFoodsValidation, food.getFoodList);
 // app.post("/foods", food.saveFood);
-app.post("/foods", food.saveFoodList);
+app.post("/foods", saveFoodValidation, food.saveFoodList);
 //app.put("/users/:id", user.updateUser);
-app.delete("/foods", food.deleteFood);
+app.delete("/foods", deleteFoodValidation, food.deleteFood);
 
 // Start the server
 app.listen(port, () => {

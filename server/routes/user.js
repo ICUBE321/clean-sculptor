@@ -1,4 +1,5 @@
 require("express");
+const { matchedData } = require("express-validator");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -15,7 +16,8 @@ const getUsers = async (request, response) => {
 
 const getUserById = async (request, response) => {
   try {
-    const user = await UserModel.findById(request.params.id);
+    const validData = matchedData(request);
+    const user = await UserModel.findById(validData.id);
     response.json(user);
   } catch (error) {
     response.status(500).json({ message: error.message });
@@ -24,11 +26,12 @@ const getUserById = async (request, response) => {
 
 const createUser = async (request, response) => {
   try {
-    const hashedPassword = await bcrypt.hash(request.body.password, 10);
+    const validData = matchedData(request);
+    const hashedPassword = await bcrypt.hash(validData.password, 10);
     const user = new UserModel({
-      name: request.body.name,
-      email: request.body.email,
-      password: request.body.password,
+      name: validData.name,
+      email: validData.email,
+      password: validData.password,
     });
 
     const userToSave = await user.save();
@@ -50,6 +53,9 @@ const updateUser = async (request, response) => {
     const options = { new: true };
 
     const result = await UserModel.findByIdAndUpdate(id, updatedUser, options);
+    if (!result) {
+      return response.status(404).send("User not found");
+    }
 
     response.send(result);
   } catch (error) {
@@ -68,8 +74,9 @@ const deleteUser = async (request, response) => {
 };
 
 const loginUser = async (request, response) => {
-  const email = request.body.email;
-  const password = request.body.password;
+  const validData = matchedData(request);
+  const email = validData.email;
+  const password = validData.password;
 
   try {
     const user = await UserModel.findOne({ email });
