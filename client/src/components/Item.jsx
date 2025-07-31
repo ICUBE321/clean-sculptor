@@ -20,20 +20,9 @@ import NewListModal from "./NewListModal";
 //   foodId: foodItem.food.foodId,
 
 const Item = () => {
-  let foodItem = {
-    id: "food_bmyxrshbfao9s1amjrvhoauob6mo",
-    name: "Chicken",
-    alias: "chicken",
-    image:
-      "https://www.edamam.com/food-img/d33/d338229d774a743f7858f6764e095878.jpg",
-    protein: 18.6,
-    carbs: 0.0,
-    fats: 15.1,
-  };
-
   // grabbing the open mode
   const location = useLocation();
-  const { openMode, listId } = location.state;
+  const { openMode, foodItem } = location.state;
 
   // for pick list modal
   const [isPickListModalOpen, setIsPickListModalOpen] = useState(false);
@@ -53,7 +42,7 @@ const Item = () => {
     <div className="w-full">
       <div className="flex justify-between">
         <Link
-          to={openMode == "list-item" ? `/list/${listId}` : "/search"}
+          to={openMode == "list-item" ? `/list/${foodItem.id}` : "/search"}
           type="button"
           className="self-start text-darkblue bg-transparent hover:bg-darkblue hover:text-darkbg focus:ring-4 focus:outline-none focus:ring-transparent font-medium rounded-full text-lg p-2.5 text-center inline-flex items-center me-2"
         >
@@ -97,23 +86,23 @@ const Item = () => {
           <div className="p-10 w-1/3">
             <img
               className="w-full rounded-full"
-              src={foodItem.image}
-              alt={foodItem.alias}
+              src={foodItem?.image}
+              alt={foodItem?.alias}
             />
           </div>
           <div className="p-4 leading-normal w-full">
             <h2 className="text-7xl font-bold dark:text-darkgray mb-5">
-              {foodItem.name}
+              {foodItem?.name}
             </h2>
             <div className="flex">
               <p className="text-2xl dark:text-darkblue mr-5">
-                Protein: {foodItem.protein}g
+                Protein: {foodItem?.nutrients.protein}g
               </p>
               <p className="text-2xl dark:text-darkblue mr-5">
-                Carbs: {foodItem.carbs}g
+                Carbs: {foodItem?.nutrients.carbs}g
               </p>
               <p className="text-2xl dark:text-darkblue mr-5">
-                Fats: {foodItem.fats}g
+                Fats: {foodItem?.nutrients.fats}g
               </p>
             </div>
             <div className="mb-5">

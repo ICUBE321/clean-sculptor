@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -13,6 +13,7 @@ import LogoutPage from "./pages/LogoutPage";
 
 function App() {
   const { token, setToken, removeToken } = useToken();
+  const [foodData, setFoodData] = useState();
   let location = useLocation();
   return (
     <div className="bg-darkbg h-screen font-sans">
@@ -27,7 +28,12 @@ function App() {
         <Routes>
           <Route path="login" element={<LoginPage setToken={setToken} />} />
           <Route path="signup" element={<SignupPage setToken={setToken} />} />
-          <Route path="search" element={<SearchPage />} />
+          <Route
+            path="search"
+            element={
+              <SearchPage foodData={foodData} setFoodData={setFoodData} />
+            }
+          />
           <Route path="item/:id" element={<ItemPage />} />
           <Route path="lists" element={<ListsPage />} />
           <Route path="list/:id" element={<ListPage />} />
