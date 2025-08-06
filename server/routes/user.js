@@ -33,7 +33,7 @@ const createUser = async (request, response) => {
 
     const userToSave = await user.save();
     //use of tokens
-    const token = jwt.sign({ userId: user._id }, process.env.MY_SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
     console.log("Valid sign up");
@@ -86,7 +86,7 @@ const loginUser = async (request, response) => {
     }
 
     //use of tokens
-    const token = jwt.sign({ userId: user._id }, process.env.MY_SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
     // response.cookie("token", token, {

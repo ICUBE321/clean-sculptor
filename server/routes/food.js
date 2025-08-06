@@ -74,6 +74,8 @@ const saveFoodList = async (request, response) => {
       ],
     });
 
+    console.log(newFoodList);
+
     try {
       const listToSave = await newFoodList.save();
       response.status(200).json(listToSave);

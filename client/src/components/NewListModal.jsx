@@ -1,11 +1,52 @@
-import React from "react";
+import { useState } from "react";
+import axios from "axios";
 
-const NewListModal = ({ isOpen, closeModal }) => {
-  if (!isOpen) return null;
-
+const NewListModal = ({ isOpen, closeModal, foods }) => {
+  const userId = JSON.parse(localStorage.getItem("userId"));
+  console.log("Foods: ", foods);
   const checkAndCloseModal = (event) => {
     if (event.target.id == "outer-modal") closeModal();
   };
+
+  const [listName, setListName] = useState("");
+  const [calories, setCalories] = useState(0);
+
+  // function to create a new list
+  const createList = (e) => {
+    e.preventDefault();
+
+    console.log("Foods from client:", foods);
+
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/foods`, {
+        userId: userId,
+        listName: listName,
+        foods: [
+          {
+            name: foods[0]?.name,
+            carbs: foods[0]?.carbs,
+            protein: foods[0]?.proteins,
+            fats: foods[0]?.fats,
+          },
+        ],
+      })
+      .then((response) => {
+        console.log("List created successfully:", response.data);
+        // navigate to search page
+        closeModal();
+      })
+      .catch((error) => {
+        console.error("Error creating list:", error);
+      });
+  };
+
+  // parse and set calories input
+  const handleCaloriesChange = (e) => {
+    const newCalories = parseFloat(e.target.value) || 0;
+    setCalories(newCalories);
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div
@@ -16,7 +57,7 @@ const NewListModal = ({ isOpen, closeModal }) => {
       }}
     >
       <div className="bg-darkbg rounded-lg p-10 h-fit w-5/12 border-2 border-darkgray">
-        <form className="max-w-sm mx-10 bg-darkbg p-10">
+        <form className="max-w-sm mx-10 bg-darkbg p-10" onSubmit={createList}>
           <div className="mb-5">
             <label
               htmlFor="name"
@@ -31,6 +72,8 @@ const NewListModal = ({ isOpen, closeModal }) => {
               id="name"
               placeholder="Bulk list"
               required
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
             />
           </div>
           <div className="mb-5">
@@ -46,6 +89,8 @@ const NewListModal = ({ isOpen, closeModal }) => {
               name=""
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               id="calories"
+              value={calories}
+              onChange={handleCaloriesChange}
             />
           </div>
           <button
@@ -55,6 +100,7 @@ const NewListModal = ({ isOpen, closeModal }) => {
             CREATE LIST
           </button>
           <button
+            type="button"
             className="focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-darkbg text-red-400 hover:text-white hover:bg-red-400"
             onClick={closeModal}
           >

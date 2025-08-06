@@ -102,7 +102,8 @@ const SearchFood = ({ foodData, setFoodData }) => {
         },
       };
     });
-    console.log(parsedFoodList);
+    console.log("Food data set:", foodData);
+    console.log("parsed food list:", parsedFoodList);
     setFoodData(parsedFoodList);
   }
 

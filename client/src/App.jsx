@@ -15,6 +15,7 @@ function App() {
   const { token, setToken, removeToken } = useToken();
   const [foodData, setFoodData] = useState();
   let location = useLocation();
+  console.log("Current path:", location.pathname);
   return (
     <div className="bg-darkbg h-screen font-sans">
       <Navbar tokenExists={token} />

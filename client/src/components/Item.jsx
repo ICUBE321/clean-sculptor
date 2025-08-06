@@ -1,28 +1,12 @@
-import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Link,
-  NavLink,
-  useLocation,
-} from "react-router-dom"; // Import BrowserRouter and Link
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom"; // Import BrowserRouter and Link
 import PickListModal from "./PickListModal";
 import NewListModal from "./NewListModal";
-
-// selectedFood format:
-//id: foodItem.food.foodId,
-// name: foodItem.food.label,
-// alias: foodItem.food.knownAs,
-// image: foodItem.food.image,
-// ingredients: new Array({
-//   quantity: foodItem.measures[0].weight,
-//   measureURI: foodItem.measures[0].uri,
-//   qualifiers: qualifiers,
-//   foodId: foodItem.food.foodId,
 
 const Item = () => {
   // grabbing the open mode
   const location = useLocation();
-  const { openMode, foodItem } = location.state;
+  const { openMode = "search", foodItem } = location.state || {};
 
   // for pick list modal
   const [isPickListModalOpen, setIsPickListModalOpen] = useState(false);
@@ -30,13 +14,60 @@ const Item = () => {
   const openPickListModal = () => setIsPickListModalOpen(true);
   const closePickListModal = () => setIsPickListModalOpen(false);
 
-  // for new list modal
   const [isNewListModalOpen, setIsNewListModalOpen] = useState(false);
 
-  const openNewListModal = () => setIsNewListModalOpen(true);
-  const closeNewListModal = () => setIsNewListModalOpen(false);
-
   const [isModifying, setIsModifying] = useState(false);
+
+  const [quantity, setQuantity] = useState(1);
+  const [unit, setUnit] = useState("g");
+  const [nutrients, setNutrients] = useState({
+    proteins: foodItem?.nutrients.protein,
+    carbs: foodItem?.nutrients.carbs,
+    fats: foodItem?.nutrients.fats,
+  });
+
+  const closeNewListModal = (mode) => {
+    setIsNewListModalOpen(false);
+    if (mode) {
+      location.state = { ...location.state, openMode: mode };
+    }
+  };
+
+  const calculateNutirents = (newQuantity, newUnit) => {
+    if (!foodItem || !foodItem.nutrients) return;
+    const baseValues = {
+      proteins: foodItem?.nutrients.protein,
+      carbs: foodItem?.nutrients.carbs,
+      fats: foodItem?.nutrients.fats,
+    };
+
+    let multiplier = newQuantity;
+    if (newUnit === "kg") {
+      multiplier /= 1000;
+    }
+
+    setNutrients({
+      proteins: (baseValues.proteins * multiplier).toFixed(2),
+      carbs: (baseValues.carbs * multiplier).toFixed(2),
+      fats: (baseValues.fats * multiplier).toFixed(2),
+    });
+  };
+
+  const handleQuantityChange = (e) => {
+    const newQuantity = parseFloat(e.target.value) || 0;
+    setQuantity(newQuantity);
+    calculateNutirents(newQuantity, unit);
+  };
+
+  const handleUnitChange = (e) => {
+    const newUnit = e.target.value;
+    setUnit(newUnit);
+    calculateNutirents(quantity, newUnit);
+  };
+
+  const handleCreateList = () => {
+    setIsNewListModalOpen(true);
+  };
 
   return (
     <div className="w-full">
@@ -76,11 +107,19 @@ const Item = () => {
         <PickListModal
           isOpen={isPickListModalOpen}
           closeModal={closePickListModal}
-          createList={openNewListModal}
+          createList={handleCreateList}
         />
         <NewListModal
           isOpen={isNewListModalOpen}
           closeModal={closeNewListModal}
+          foods={[
+            {
+              name: foodItem?.name,
+              carbs: nutrients.carbs,
+              proteins: nutrients.proteins,
+              fats: nutrients.fats,
+            },
+          ]}
         />
         <div className="grow flex flex-row p-10">
           <div className="p-10 w-1/3">
@@ -96,23 +135,29 @@ const Item = () => {
             </h2>
             <div className="flex">
               <p className="text-2xl dark:text-darkblue mr-5">
-                Protein: {foodItem?.nutrients.protein}g
+                Protein: {nutrients.proteins}
+                {unit}
               </p>
               <p className="text-2xl dark:text-darkblue mr-5">
-                Carbs: {foodItem?.nutrients.carbs}g
+                Carbs: {nutrients.carbs}
+                {unit}
               </p>
               <p className="text-2xl dark:text-darkblue mr-5">
-                Fats: {foodItem?.nutrients.fats}g
+                Fats: {nutrients.fats}
+                {unit}
               </p>
             </div>
             <div className="mb-5">
               <select
                 id="underline_select"
                 className="block py-2.5 px-0 w-1/5 text-sm text-darkblue bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                value={unit}
+                onChange={handleUnitChange}
               >
-                <option defaultChecked>Choose a unit</option>
-                <option value="grams">g</option>
-                <option value="kilograms">kg</option>
+                <option defaultChecked value="g">
+                  grams
+                </option>
+                <option value="kg">kilograms</option>
               </select>
             </div>
             <div className="text-darkblue">
@@ -121,6 +166,8 @@ const Item = () => {
               </label>
               <input
                 type="number"
+                value={quantity}
+                onChange={handleQuantityChange}
                 name=""
                 id="number-input"
                 className="text-sm p-2 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0"

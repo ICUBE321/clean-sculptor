@@ -39,7 +39,9 @@ const SignUp = ({ setToken }) => {
       .then(function (response) {
         setToken(response.data.token, response.data.user._id);
       })
-      .catch(function (error) {});
+      .catch(function (error) {
+        console.log("Signup error:", error);
+      });
   }
 
   //Function to validate email using regular expression
