@@ -1,7 +1,6 @@
 require("express");
 
 const { options } = require("nodemon/lib/config");
-const FoodListModel = require("../models/foodListModel");
 const foodListModel = require("../models/foodListModel");
 
 const searchFood = (request, response) => {
@@ -17,10 +16,10 @@ const searchFood = (request, response) => {
 };
 
 // to retrieve all the user's food lists
-const getAllFoodLists = async (request, response) => {
+const getAllUserFoodLists = async (request, response) => {
   const userId = request.query.userId;
   try {
-    const allFoodLists = await FoodListModel.find({ userId: userId });
+    const allFoodLists = await foodListModel.find({ userId: userId });
     response.json(allFoodLists);
   } catch (error) {
     response.status(500).json({ message: error.message });
@@ -32,7 +31,7 @@ const getFoodList = async (request, response) => {
   const userId = request.query.userId;
   const listName = request.query.listName;
   try {
-    const foodList = await FoodListModel.findOne({
+    const foodList = await foodListModel.findOne({
       userId: userId,
       listName: listName,
     });
@@ -52,7 +51,7 @@ const getFoodList = async (request, response) => {
 const saveFoodList = async (request, response) => {
   const userId = request.body.userId;
   const listName = request.body.listName;
-  let listExists = await FoodListModel.exists({
+  let listExists = await foodListModel.exists({
     userId: userId,
     listName: listName,
   });
@@ -67,6 +66,10 @@ const saveFoodList = async (request, response) => {
       foods: [
         {
           name: request.body.foods[0].name,
+          alias: request.body.foods[0].alias,
+          image: request.body.foods[0].image,
+          calories: request.body.foods[0].calories,
+          unit: request.body.foods[0].unit,
           carbs: request.body.foods[0].carbs,
           protein: request.body.foods[0].protein,
           fats: request.body.foods[0].fats,
@@ -85,48 +88,45 @@ const saveFoodList = async (request, response) => {
   }
 };
 
-const saveFood = async (request, response) => {
+const saveFoodToList = async (request, response) => {
   // find the food document using user id
   const userId = request.body.userId;
-  const foodId = await FoodModel.exists({ userId: userId });
-  console.log(`does food id for user id ${userId} is: ${foodId}`);
-  // and if it exists
-  if (foodId == null) {
-    //if null add new food document
-    let food = new FoodModel({
-      userId: userId,
-      foods: [
-        {
-          name: request.body.name,
-          carbs: request.body.carbs,
-          protein: request.body.protein,
-          fats: request.body.fats,
-        },
-      ],
-    });
+  const listName = request.body.listName;
+  let listExists = await foodListModel.exists({
+    userId: userId,
+    listName: listName,
+  });
 
-    try {
-      const foodToSave = await food.save();
-      response.status(200).json(foodToSave);
-    } catch (error) {
-      response.status(400).json({ message: error.message });
-    }
+  console.log(
+    `userId: ${userId}, listName: ${listName}, listExists: ${listExists}`
+  );
+
+  if (!listExists) {
+    response.status(400).json({ message: "This list does not exist." });
   } else {
-    // append new food item to the foods list, else create new doc
-    let foodItem = {
-      name: request.body.name,
-      carbs: request.body.carbs,
-      protein: request.body.protein,
-      fats: request.body.fats,
+    // add food to list
+    let newFood = {
+      name: request.body.food.name,
+      alias: request.body.food.alias,
+      image: request.body.food.image,
+      calories: request.body.food.calories,
+      unit: request.body.food.unit,
+      carbs: request.body.food.carbs,
+      protein: request.body.food.protein,
+      fats: request.body.food.fats,
     };
 
+    console.log(
+      `Adding food ${newFood.name} to list ${listName} for user ${userId}`
+    );
+
     try {
-      const foodToUpdate = await FoodModel.findByIdAndUpdate(
-        foodId,
-        { $push: { foods: foodItem } },
+      const updatedList = await foodListModel.findOneAndUpdate(
+        { userId: userId, listName: listName },
+        { $push: { foods: newFood } },
         { new: true }
       );
-      response.status(200).json(foodToUpdate);
+      response.status(200).json(updatedList);
     } catch (error) {
       response.status(400).json({ message: error.message });
     }
@@ -144,9 +144,9 @@ const deleteFood = async (request, response) => {
 
 module.exports = {
   searchFood,
-  getAllFoodLists,
+  getAllUserFoodLists,
   getFoodList,
   saveFoodList,
-  saveFood,
+  saveFoodToList,
   deleteFood,
 };

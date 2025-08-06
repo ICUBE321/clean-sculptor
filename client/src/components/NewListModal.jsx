@@ -15,8 +15,6 @@ const NewListModal = ({ isOpen, closeModal, foods }) => {
   const createList = (e) => {
     e.preventDefault();
 
-    console.log("Foods from client:", foods);
-
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/foods`, {
         userId: userId,
@@ -24,8 +22,11 @@ const NewListModal = ({ isOpen, closeModal, foods }) => {
         foods: [
           {
             name: foods[0]?.name,
+            alias: foods[0]?.alias,
+            image: foods[0]?.image,
+            unit: foods[0]?.unit || "g",
             carbs: foods[0]?.carbs,
-            protein: foods[0]?.proteins,
+            protein: foods[0]?.protein,
             fats: foods[0]?.fats,
           },
         ],

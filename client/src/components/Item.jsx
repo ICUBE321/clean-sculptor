@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import BrowserRouter and Link
+import { Link, useLocation } from "react-router-dom";
 import PickListModal from "./PickListModal";
 import NewListModal from "./NewListModal";
 
 const Item = () => {
-  // grabbing the open mode
+  // grabbing the passed location state variables
   const location = useLocation();
   const { openMode = "search", foodItem } = location.state || {};
 
@@ -21,9 +21,9 @@ const Item = () => {
   const [quantity, setQuantity] = useState(1);
   const [unit, setUnit] = useState("g");
   const [nutrients, setNutrients] = useState({
-    proteins: foodItem?.nutrients.protein,
-    carbs: foodItem?.nutrients.carbs,
-    fats: foodItem?.nutrients.fats,
+    proteins: foodItem?.protein,
+    carbs: foodItem?.carbs,
+    fats: foodItem?.fats,
   });
 
   const closeNewListModal = (mode) => {
@@ -34,11 +34,11 @@ const Item = () => {
   };
 
   const calculateNutirents = (newQuantity, newUnit) => {
-    if (!foodItem || !foodItem.nutrients) return;
+    if (!foodItem) return;
     const baseValues = {
-      proteins: foodItem?.nutrients.protein,
-      carbs: foodItem?.nutrients.carbs,
-      fats: foodItem?.nutrients.fats,
+      proteins: foodItem?.protein,
+      carbs: foodItem?.carbs,
+      fats: foodItem?.fats,
     };
 
     let multiplier = newQuantity;
@@ -108,6 +108,15 @@ const Item = () => {
           isOpen={isPickListModalOpen}
           closeModal={closePickListModal}
           createList={handleCreateList}
+          foodItem={{
+            name: foodItem?.name,
+            alias: foodItem?.alias,
+            image: foodItem?.image,
+            unit: foodItem?.unit || "g",
+            carbs: nutrients.carbs,
+            protein: nutrients.proteins,
+            fats: nutrients.fats,
+          }}
         />
         <NewListModal
           isOpen={isNewListModalOpen}
@@ -115,8 +124,11 @@ const Item = () => {
           foods={[
             {
               name: foodItem?.name,
+              alias: foodItem?.alias,
+              image: foodItem?.image,
+              unit: foodItem?.unit || "g",
               carbs: nutrients.carbs,
-              proteins: nutrients.proteins,
+              protein: nutrients.proteins,
               fats: nutrients.fats,
             },
           ]}

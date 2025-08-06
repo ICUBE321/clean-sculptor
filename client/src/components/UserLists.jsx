@@ -1,24 +1,26 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom"; // Import BrowserRouter and Link
 import NewListModal from "./NewListModal";
 import axios from "axios";
 
-const UserLists = ({}) => {
+const UserLists = () => {
   const [foodLists, setFoodLists] = useState(null);
   const hasInitialized = useRef(false); // A ref to check if initialization has occurred
   let userId = JSON.parse(localStorage.getItem("userId"));
 
   useEffect(() => {
     if (!hasInitialized.current) {
-      retrieveAllFoodLists();
+      retrieveAllLists();
       hasInitialized.current = true; // Mark as initialized
     }
   }, []);
 
   // call function to retrieve all user food lists when the page is opened
-  const retrieveAllFoodLists = () => {
+  const retrieveAllLists = () => {
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/foods/all?userId=${userId}`)
+      .get(
+        `${import.meta.env.VITE_API_BASE_URL}/food_lists/all?userId=${userId}`
+      )
       .then(function (response) {
         let tmpList = [];
         if (response.data) {
@@ -32,7 +34,7 @@ const UserLists = ({}) => {
         setFoodLists(tmpList);
       })
       .catch(function (error) {
-        console.log(error);
+        console.log("Error retrieving food lists:", error);
       });
   };
 
@@ -64,6 +66,7 @@ const UserLists = ({}) => {
             >
               <Link
                 to={"/list/" + list.id}
+                state={{ listId: list.id, listName: list.name }}
                 className="flex items-center space-x-4 rtl:space-x-reverse"
               >
                 <div className="flex-1 min-w-0">

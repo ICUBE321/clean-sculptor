@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-const PickListModal = ({ isOpen, closeModal, createList }) => {
+const PickListModal = ({ isOpen, closeModal, createList, foodItem }) => {
   const [foodLists, setFoodLists] = useState(null);
   const hasInitialized = useRef(false); // A ref to check if initialization has occurred
   let userId = JSON.parse(localStorage.getItem("userId"));
@@ -16,7 +16,7 @@ const PickListModal = ({ isOpen, closeModal, createList }) => {
   // fetch user's food lists from the server
   const fetchFoodLists = async () => {
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/foods/all`, {
+      .get(`${import.meta.env.VITE_API_BASE_URL}/food_lists/all`, {
         params: {
           userId: userId,
         },
@@ -43,6 +43,29 @@ const PickListModal = ({ isOpen, closeModal, createList }) => {
   };
 
   // save food item to the selected list
+  const saveToList = async (listName) => {
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/food`, {
+        userId: userId,
+        listName: listName,
+        food: {
+          name: foodItem.name,
+          alias: foodItem.alias,
+          image: foodItem.image,
+          unit: foodItem.unit || "g",
+          carbs: foodItem.carbs,
+          protein: foodItem.protein,
+          fats: foodItem.fats,
+        },
+      })
+      .then(function (response) {
+        console.log("Food item saved to list successfully:", response.data);
+        closeModal();
+      })
+      .catch(function (error) {
+        console.error("Error saving food item to list:", error);
+      });
+  };
 
   if (!isOpen) return null;
   return (
@@ -61,7 +84,10 @@ const PickListModal = ({ isOpen, closeModal, createList }) => {
                 className="text-white p-3 sm:p-4 hover:bg-darkgray"
                 key={list.id}
               >
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                <div
+                  onClick={() => saveToList(list.name)}
+                  className="flex items-center space-x-4 rtl:space-x-reverse"
+                >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate text-white">
                       {list.name}
