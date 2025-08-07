@@ -59,14 +59,14 @@ app.put("/users/:id", user.updateUser);
 app.delete("/users/:id", user.deleteUser);
 
 // food endpoints
-// app.get("/foods/:name", food.searchFood);
-//app.get("/foods", );
 app.get("/food_lists/all", food.getAllUserFoodLists);
-app.get("/food_list", food.getFoodList);
+app.get("/food_list", food.getSpecificFoodList);
 app.post("/food", food.saveFoodToList);
-app.post("/foods", food.saveFoodList);
-//app.put("/users/:id", user.updateUser);
+app.post("/foods", food.saveSpecificFoodList);
+app.post("/foods/empty", food.createEmptyFoodList);
+app.post("/food_list/update", food.updateSpecificFoodList);
 app.delete("/foods", food.deleteFood);
+app.delete("/food_list", food.deleteList);
 
 // Start the server
 app.listen(port, () => {

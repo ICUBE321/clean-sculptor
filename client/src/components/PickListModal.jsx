@@ -43,11 +43,11 @@ const PickListModal = ({ isOpen, closeModal, createList, foodItem }) => {
   };
 
   // save food item to the selected list
-  const saveToList = async (listName) => {
+  const saveToList = async (listId) => {
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/food`, {
         userId: userId,
-        listName: listName,
+        listId: listId,
         food: {
           name: foodItem.name,
           alias: foodItem.alias,
@@ -85,7 +85,7 @@ const PickListModal = ({ isOpen, closeModal, createList, foodItem }) => {
                 key={list.id}
               >
                 <div
-                  onClick={() => saveToList(list.name)}
+                  onClick={() => saveToList(list.id)}
                   className="flex items-center space-x-4 rtl:space-x-reverse"
                 >
                   <div className="flex-1 min-w-0">

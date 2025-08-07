@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const NewListModal = ({ isOpen, closeModal, foods }) => {
+const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
   const userId = JSON.parse(localStorage.getItem("userId"));
   console.log("Foods: ", foods);
   const checkAndCloseModal = (event) => {
@@ -14,7 +14,7 @@ const NewListModal = ({ isOpen, closeModal, foods }) => {
   // function to create a new list
   const createList = (e) => {
     e.preventDefault();
-
+    console.log("Creating list for user:", userId, "with name:", listName);
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/foods`, {
         userId: userId,
@@ -33,11 +33,38 @@ const NewListModal = ({ isOpen, closeModal, foods }) => {
       })
       .then((response) => {
         console.log("List created successfully:", response.data);
+        setListName("");
+        setCalories(0);
         // navigate to search page
         closeModal();
       })
       .catch((error) => {
         console.error("Error creating list:", error);
+      });
+  };
+
+  // function to create an empty list
+  const createEmptyList = (e) => {
+    e.preventDefault();
+    console.log(
+      "Creating empty list for user:",
+      userId,
+      "with name:",
+      listName
+    );
+
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/foods/empty`, {
+        userId: userId,
+        listName: listName,
+      })
+      .then((response) => {
+        console.log("Empty list created successfully:", response.data);
+        // navigate to search page
+        closeModal();
+      })
+      .catch((error) => {
+        console.error("Error creating empty list:", error);
       });
   };
 
@@ -58,7 +85,16 @@ const NewListModal = ({ isOpen, closeModal, foods }) => {
       }}
     >
       <div className="bg-darkbg rounded-lg p-10 h-fit w-5/12 border-2 border-darkgray">
-        <form className="max-w-sm mx-10 bg-darkbg p-10" onSubmit={createList}>
+        <form
+          className="max-w-sm mx-10 bg-darkbg p-10"
+          onSubmit={(e) => {
+            if (openMode === "food") {
+              createList(e);
+            } else {
+              createEmptyList(e);
+            }
+          }}
+        >
           <div className="mb-5">
             <label
               htmlFor="name"

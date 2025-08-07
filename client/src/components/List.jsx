@@ -9,10 +9,11 @@ const List = () => {
   const hasInitialized = useRef(false); // A ref to check if initialization has occurred
   let userId = JSON.parse(localStorage.getItem("userId"));
   const [currentList, setCurrentList] = useState({
-    id: "",
-    name: "",
+    id: listId || "",
+    name: listName || "",
     foods: [],
   });
+  const [isModifying, setIsModifying] = useState(false);
 
   useEffect(() => {
     if (!hasInitialized.current) {
@@ -21,8 +22,6 @@ const List = () => {
     }
   }, []);
 
-  const [isModifying, setIsModifying] = useState(false);
-
   // get food items in user list
   const getAllFoodItems = async () => {
     console.log(`List id: ${listId}, list name: ${listName}`);
@@ -30,18 +29,18 @@ const List = () => {
       .get(`${import.meta.env.VITE_API_BASE_URL}/food_list/`, {
         params: {
           userId: userId,
-          listName: listName,
+          listId: listId,
         },
       })
       .then((response) => {
         console.log("Food items in list:", response.data);
         let listData = response.data;
         let parsedList = {
-          id: listData.id,
+          id: listData._id,
           name: listData.listName,
           foods: listData.foods.map((food) => {
             return {
-              id: food.id,
+              id: food._id,
               name: food.name,
               alias: food.alias,
               image: food.image,
@@ -56,6 +55,45 @@ const List = () => {
       })
       .catch((error) => {
         console.error("Error fetching food items:", error);
+      });
+  };
+
+  // function to handle list name change
+  const handleListNameChange = (e) => {
+    const newName = e.target.value;
+    setCurrentList((prevList) => ({
+      ...prevList,
+      name: newName,
+    }));
+  };
+
+  // function to handle food deletion
+  const handleDeteteFood = async (foodId) => {
+    let updatedFoods = currentList.foods.filter((food) => food.id !== foodId);
+    setCurrentList((prevList) => {
+      return {
+        ...prevList,
+        foods: updatedFoods,
+      };
+    });
+  };
+
+  // functinon to update the food list
+  const handleListUpdate = async () => {
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/food_list/update`, {
+        userId: userId,
+        listId: currentList.id,
+        listName: currentList.name,
+        foods: currentList.foods,
+      })
+      .then((response) => {
+        console.log("List updated successfully:", response.data);
+        setIsModifying(false);
+        getAllFoodItems(); // Refresh the list after updating
+      })
+      .catch((error) => {
+        console.error("Error updating list:", error);
       });
   };
 
@@ -82,10 +120,14 @@ const List = () => {
           </svg>
         </Link>
         <button
-          type=""
-          onClick={() =>
-            isModifying ? setIsModifying(false) : setIsModifying(true)
-          }
+          type="button"
+          onClick={() => {
+            if (isModifying) {
+              handleListUpdate();
+            } else {
+              setIsModifying(true);
+            }
+          }}
           className="self-end border font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue focus:ring-blue-800"
         >
           {isModifying ? "SAVE" : "MODIFY"}
@@ -99,6 +141,7 @@ const List = () => {
             id=""
             placeholder={currentList.name.toUpperCase()}
             className="grow text-5xl font-extrabold text-center text-lightblue bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0"
+            onChange={handleListNameChange}
           />
         ) : (
           <h1 className="grow text-5xl font-extrabold text-center text-darkblue">
@@ -158,7 +201,12 @@ const List = () => {
                       {food.unit}
                     </li>
                   </ul>
-                  <button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleDeteteFood(food.id);
+                    }}
+                  >
                     <svg
                       className="w-6 h-6 text-red-400 hover:text-red-600"
                       aria-hidden="true"
@@ -178,8 +226,8 @@ const List = () => {
                 </div>
               ) : (
                 <Link
-                  to={"/item/" + food.id}
-                  state={{ openMode: "list-item", listId: currentList.id }}
+                  to={"/list_item/" + food.id}
+                  state={{ openMode: "item", foodItem: food, listId: listId }}
                   className="flex items-center justify-center space-x-4 rtl:space-x-reverse"
                 >
                   <div className="flex-shrink-0">

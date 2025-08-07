@@ -165,6 +165,7 @@ const SearchFood = ({ foodData, setFoodData }) => {
         isOpen={isNewListModalOpen}
         closeModal={closeNewListModal}
         foods={[selectedFood]}
+        openMode="food"
       />
       <h1
         htmlFor="default-search"

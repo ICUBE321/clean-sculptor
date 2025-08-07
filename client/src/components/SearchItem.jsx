@@ -3,10 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 import PickListModal from "./PickListModal";
 import NewListModal from "./NewListModal";
 
-const Item = () => {
+const SearchItem = () => {
   // grabbing the passed location state variables
   const location = useLocation();
-  const { openMode = "search", foodItem } = location.state || {};
+  const { foodItem } = location.state || {};
 
   // for pick list modal
   const [isPickListModalOpen, setIsPickListModalOpen] = useState(false);
@@ -16,8 +16,6 @@ const Item = () => {
 
   const [isNewListModalOpen, setIsNewListModalOpen] = useState(false);
 
-  const [isModifying, setIsModifying] = useState(false);
-
   const [quantity, setQuantity] = useState(1);
   const [unit, setUnit] = useState("g");
   const [nutrients, setNutrients] = useState({
@@ -26,11 +24,8 @@ const Item = () => {
     fats: foodItem?.fats,
   });
 
-  const closeNewListModal = (mode) => {
+  const closeNewListModal = () => {
     setIsNewListModalOpen(false);
-    if (mode) {
-      location.state = { ...location.state, openMode: mode };
-    }
   };
 
   const calculateNutirents = (newQuantity, newUnit) => {
@@ -73,7 +68,7 @@ const Item = () => {
     <div className="w-full">
       <div className="flex justify-between">
         <Link
-          to={openMode == "list-item" ? `/list/${foodItem.id}` : "/search"}
+          to="/search"
           type="button"
           className="self-start text-darkblue bg-transparent hover:bg-darkblue hover:text-darkbg focus:ring-4 focus:outline-none focus:ring-transparent font-medium rounded-full text-lg p-2.5 text-center inline-flex items-center me-2"
         >
@@ -91,17 +86,6 @@ const Item = () => {
             />
           </svg>
         </Link>
-        {openMode == "list-item" && (
-          <button
-            type=""
-            onClick={() =>
-              isModifying ? setIsModifying(false) : setIsModifying(true)
-            }
-            className="self-end border font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue focus:ring-blue-800"
-          >
-            {isModifying ? "SAVE" : "MODIFY"}
-          </button>
-        )}
       </div>
       <div className="flex flex-row items-center w-full">
         <PickListModal
@@ -132,6 +116,7 @@ const Item = () => {
               fats: nutrients.fats,
             },
           ]}
+          openMode="food"
         />
         <div className="grow flex flex-row p-10">
           <div className="p-10 w-1/3">
@@ -187,25 +172,19 @@ const Item = () => {
             </div>
           </div>
         </div>
-        {openMode == "list-item" ? (
-          <button className="self-end text-center me-2 mb-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 bg-darkbg text-red-400 hover:text-white hover:bg-red-400">
-            DELETE
-          </button>
-        ) : (
-          <button
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              openPickListModal();
-            }}
-            className="self-end text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-blue-800"
-          >
-            ADD ITEM
-          </button>
-        )}
+        <button
+          type="submit"
+          onClick={(e) => {
+            e.preventDefault();
+            openPickListModal();
+          }}
+          className="self-end text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-blue-800"
+        >
+          ADD ITEM
+        </button>
       </div>
     </div>
   );
 };
 
-export default Item;
+export default SearchItem;

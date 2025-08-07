@@ -6,7 +6,8 @@ import Navbar from "./components/Navbar";
 import SearchPage from "./pages/SearchPage";
 import ListsPage from "./pages/ListsPage";
 import ProfilePage from "./pages/ProfilePage";
-import ItemPage from "./pages/ItemPage";
+import SearchItemPage from "./pages/SearchItemPage";
+import ListItemPage from "./pages/ListItemPage";
 import ListPage from "./pages/ListPage";
 import useToken from "./hooks/useToken";
 import LogoutPage from "./pages/LogoutPage";
@@ -35,7 +36,8 @@ function App() {
               <SearchPage foodData={foodData} setFoodData={setFoodData} />
             }
           />
-          <Route path="item/:id" element={<ItemPage />} />
+          <Route path="item/:id" element={<SearchItemPage />} />
+          <Route path="list_item/:id" element={<ListItemPage />} />
           <Route path="lists" element={<ListsPage />} />
           <Route path="list/:id" element={<ListPage />} />
           <Route path="profile" element={<ProfilePage />} />

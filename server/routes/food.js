@@ -20,116 +20,138 @@ const getAllUserFoodLists = async (request, response) => {
   const userId = request.query.userId;
   try {
     const allFoodLists = await foodListModel.find({ userId: userId });
-    response.json(allFoodLists);
+    return response.status(200).json(allFoodLists);
   } catch (error) {
-    response.status(500).json({ message: error.message });
+    return response.status(500).json({ message: error.message });
   }
 };
 
 // to retrieve a user's specific food list
-const getFoodList = async (request, response) => {
+const getSpecificFoodList = async (request, response) => {
   const userId = request.query.userId;
-  const listName = request.query.listName;
+  const listId = request.query.listId;
   try {
     const foodList = await foodListModel.findOne({
       userId: userId,
-      listName: listName,
+      _id: listId,
     });
 
     if (foodList) {
-      response.json(foodList);
+      return response.status(200).json(foodList);
     } else {
       // found nothing
-      response.status(400).json({ message: "This list does not exist" });
+      return response.status(400).json({ message: "This list does not exist" });
     }
   } catch (error) {
-    response.status(500).json({ message: error.message });
+    return response.status(500).json({ message: error.message });
   }
 };
 
-// to save a new foodlist
-const saveFoodList = async (request, response) => {
-  const userId = request.body.userId;
-  const listName = request.body.listName;
-  let listExists = await foodListModel.exists({
-    userId: userId,
-    listName: listName,
-  });
-  if (listExists) {
-    // return to the user a message saying the list name already exists
-    response.status(400).json({ message: "This list name is already in use." });
-  } else {
-    //create a new list object and save it
-    let newFoodList = new foodListModel({
-      userId: userId,
-      listName: listName,
-      foods: [
-        {
-          name: request.body.foods[0].name,
-          alias: request.body.foods[0].alias,
-          image: request.body.foods[0].image,
-          calories: request.body.foods[0].calories,
-          unit: request.body.foods[0].unit,
-          carbs: request.body.foods[0].carbs,
-          protein: request.body.foods[0].protein,
-          fats: request.body.foods[0].fats,
-        },
-      ],
+// to save a new food list including the food items in it
+const saveSpecificFoodList = async (request, response) => {
+  const { userId, listName, foods } = request.body;
+
+  try {
+    const listExists = await foodListModel.exists({ userId, listName });
+    if (listExists) {
+      // return to the user a message saying the list name already exists
+      return response
+        .status(400)
+        .json({ message: "This list name is already in use." });
+    } else {
+      // map food items first
+      const formattedFoods = foods.map((food) => ({
+        name: food.name,
+        alias: food.alias,
+        image: food.image,
+        calories: food.calories,
+        unit: food.unit,
+        carbs: food.carbs,
+        protein: food.protein,
+        fats: food.fats,
+      }));
+
+      //create a new list object and save it
+      const newFoodList = new foodListModel({
+        userId,
+        listName,
+        foods: formattedFoods,
+      });
+
+      console.log(newFoodList);
+
+      const savedList = await newFoodList.save();
+      return response.status(200).json(savedList);
+    }
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
+  }
+};
+
+// function to save a food item to a specific list
+const saveFoodToList = async (request, response) => {
+  const { userId, listId, food } = request.body;
+
+  try {
+    let listExists = await foodListModel.exists({
+      userId,
+      _id: listId,
     });
 
-    console.log(newFoodList);
+    console.log(
+      `userId: ${userId}, listName: ${listId}, listExists: ${listExists}`
+    );
 
-    try {
-      const listToSave = await newFoodList.save();
-      response.status(200).json(listToSave);
-    } catch (error) {
-      response.status(400).json({ message: error.message });
+    if (!listExists) {
+      return response
+        .status(400)
+        .json({ message: "This list does not exist." });
+    } else {
+      console.log(
+        `Adding food ${food.name} to list ${listId} for user ${userId}`
+      );
+      const updatedList = await foodListModel.findOneAndUpdate(
+        { userId, _id: listId },
+        { $push: { foods: food } },
+        { new: true }
+      );
+      return response.status(200).json(updatedList);
     }
+  } catch (error) {
+    return esponse.status(400).json({ message: error.message });
   }
 };
 
-const saveFoodToList = async (request, response) => {
-  // find the food document using user id
-  const userId = request.body.userId;
-  const listName = request.body.listName;
-  let listExists = await foodListModel.exists({
-    userId: userId,
-    listName: listName,
-  });
+// function to create an empty food list
+const createEmptyFoodList = async (request, response) => {
+  const { userId, listName } = request.body;
 
-  console.log(
-    `userId: ${userId}, listName: ${listName}, listExists: ${listExists}`
-  );
+  try {
+    let listExists = await foodListModel.exists({
+      userId: userId,
+      listName: listName,
+    });
 
-  if (!listExists) {
-    response.status(400).json({ message: "This list does not exist." });
-  } else {
-    // add food to list
-    let newFood = {
-      name: request.body.food.name,
-      alias: request.body.food.alias,
-      image: request.body.food.image,
-      calories: request.body.food.calories,
-      unit: request.body.food.unit,
-      carbs: request.body.food.carbs,
-      protein: request.body.food.protein,
-      fats: request.body.food.fats,
-    };
+    if (listExists) {
+      // return to the user a message saying the list name already exists
+      return response
+        .status(400)
+        .json({ message: "This list name is already in use." });
+    } else {
+      //create a new list object and save it
+      let newFoodList = new foodListModel({
+        userId: userId,
+        listName: listName,
+        foods: [],
+      });
 
-    console.log(
-      `Adding food ${newFood.name} to list ${listName} for user ${userId}`
-    );
+      console.log(newFoodList);
 
-    try {
-      const updatedList = await foodListModel.findOneAndUpdate(
-        { userId: userId, listName: listName },
-        { $push: { foods: newFood } },
-        { new: true }
-      );
-      response.status(200).json(updatedList);
-    } catch (error) {
-      response.status(400).json({ message: error.message });
+      const listToSave = await newFoodList.save();
+      return response.status(200).json(listToSave);
     }
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
   }
 };
 
@@ -142,11 +164,56 @@ const deleteFood = async (request, response) => {
   response.send(`food with id:${foodId} to be deleted for user ${userId}`);
 };
 
+// function to delete a food list
+const deleteList = async (request, response) => {
+  const userId = request.query.userId;
+  const listId = request.query.listId;
+
+  try {
+    const deletedList = await foodListModel.findOneAndDelete({
+      userId: userId,
+      _id: listId,
+    });
+    if (deletedList) {
+      response.status(200).json({ message: "List deleted successfully." });
+    } else {
+      response.status(404).json({ message: "List not found." });
+    }
+  } catch (error) {
+    response.status(400).json({ message: error.message });
+  }
+};
+
+// function to update a specific food list
+const updateSpecificFoodList = async (request, response) => {
+  const { userId, listId, listName, foods } = request.body;
+
+  try {
+    const updatedList = await foodListModel.findOneAndUpdate(
+      { userId, _id: listId },
+      { listName: listName, foods: foods },
+      { new: true }
+    );
+
+    if (updatedList) {
+      console.log("Updated list:", updatedList);
+      return response.status(200).json(updatedList);
+    } else {
+      return response.status(404).json({ message: "List not found." });
+    }
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   searchFood,
   getAllUserFoodLists,
-  getFoodList,
-  saveFoodList,
+  getSpecificFoodList,
+  saveSpecificFoodList,
   saveFoodToList,
   deleteFood,
+  createEmptyFoodList,
+  deleteList,
+  updateSpecificFoodList,
 };
