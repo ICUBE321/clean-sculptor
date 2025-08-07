@@ -1,5 +1,12 @@
-require("dotenv").config();
-const mongoString = process.env.ATLAS_URI;
+const path = require("path");
+require("dotenv").config({
+  path: path.resolve(
+    __dirname,
+    `.env.${process.env.NODE_ENV || "development"}`
+  ),
+});
+console.log(`Environment: ${process.env.NODE_ENV}`);
+const mongoString = process.env.MONGO_URI;
 
 const express = require("express");
 const cors = require("cors");
@@ -66,14 +73,15 @@ app.put("/users/:id", userIdValidation, user.updateUser);
 app.delete("/users/:id", userIdValidation, user.deleteUser);
 
 // food endpoints
-// app.get("/foods/:name", food.searchFood);
-//app.get("/foods", );
-app.get("/foods/all", getFoodsValidation, food.getAllFoodLists);
-app.get("/foods", getFoodsValidation, food.getFoodList);
-// app.post("/foods", food.saveFood);
-app.post("/foods", saveFoodValidation, food.saveFoodList);
-//app.put("/users/:id", user.updateUser);
-app.delete("/foods", deleteFoodValidation, food.deleteFood);
+app.get("/food_lists/all", food.getAllUserFoodLists);
+app.get("/food_list", food.getSpecificFoodList);
+app.post("/food", food.saveFoodToList);
+app.post("/foods", food.saveSpecificFoodList);
+app.post("/foods/empty", food.createEmptyFoodList);
+app.post("/food_list/update", food.updateSpecificFoodList);
+app.post("/food/update", food.updateFoodItem);
+app.delete("/food", food.deleteFoodFromList);
+app.delete("/food_list", food.deleteFoodList);
 
 // Start the server
 app.listen(port, () => {

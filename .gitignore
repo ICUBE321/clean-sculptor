@@ -1,2 +1,8 @@
 .DS_Store
 client/.env
+client/.env.production
+.gitignore
+server/.env.development
+.gitignore
+server/.env.production
+client/.env.development

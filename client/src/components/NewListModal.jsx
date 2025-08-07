@@ -1,11 +1,83 @@
-import React from "react";
+import { useState } from "react";
+import axios from "axios";
 
-const NewListModal = ({ isOpen, closeModal }) => {
-  if (!isOpen) return null;
-
+const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
+  const userId = JSON.parse(localStorage.getItem("userId"));
+  console.log("Foods: ", foods);
   const checkAndCloseModal = (event) => {
     if (event.target.id == "outer-modal") closeModal();
   };
+
+  const [listName, setListName] = useState("");
+  const [calories, setCalories] = useState(0);
+
+  // function to create a new list
+  const createList = (e) => {
+    console.log("foodItem to save: ", foods[0]);
+
+    e.preventDefault();
+    console.log("Creating list for user:", userId, "with name:", listName);
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/foods`, {
+        userId: userId,
+        listName: listName,
+        foods: [
+          {
+            name: foods[0]?.name,
+            alias: foods[0]?.alias,
+            image: foods[0]?.image,
+            unit: foods[0]?.unit || "g",
+            carbs: foods[0]?.carbs,
+            protein: foods[0]?.protein,
+            fats: foods[0]?.fats,
+            quantity: foods[0]?.quantity || 1,
+          },
+        ],
+      })
+      .then((response) => {
+        console.log("List created successfully:", response.data);
+        setListName("");
+        setCalories(0);
+        // navigate to search page
+        closeModal();
+      })
+      .catch((error) => {
+        console.error("Error creating list:", error);
+      });
+  };
+
+  // function to create an empty list
+  const createEmptyList = (e) => {
+    e.preventDefault();
+    console.log(
+      "Creating empty list for user:",
+      userId,
+      "with name:",
+      listName
+    );
+
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/foods/empty`, {
+        userId: userId,
+        listName: listName,
+      })
+      .then((response) => {
+        console.log("Empty list created successfully:", response.data);
+        // navigate to search page
+        closeModal();
+      })
+      .catch((error) => {
+        console.error("Error creating empty list:", error);
+      });
+  };
+
+  // parse and set calories input
+  const handleCaloriesChange = (e) => {
+    const newCalories = parseFloat(e.target.value) || 0;
+    setCalories(newCalories);
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div
@@ -16,7 +88,16 @@ const NewListModal = ({ isOpen, closeModal }) => {
       }}
     >
       <div className="bg-darkbg rounded-lg p-10 h-fit w-5/12 border-2 border-darkgray">
-        <form className="max-w-sm mx-10 bg-darkbg p-10">
+        <form
+          className="max-w-sm mx-10 bg-darkbg p-10"
+          onSubmit={(e) => {
+            if (openMode === "food") {
+              createList(e);
+            } else {
+              createEmptyList(e);
+            }
+          }}
+        >
           <div className="mb-5">
             <label
               htmlFor="name"
@@ -31,6 +112,8 @@ const NewListModal = ({ isOpen, closeModal }) => {
               id="name"
               placeholder="Bulk list"
               required
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
             />
           </div>
           <div className="mb-5">
@@ -46,6 +129,8 @@ const NewListModal = ({ isOpen, closeModal }) => {
               name=""
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               id="calories"
+              value={calories}
+              onChange={handleCaloriesChange}
             />
           </div>
           <button
@@ -55,6 +140,7 @@ const NewListModal = ({ isOpen, closeModal }) => {
             CREATE LIST
           </button>
           <button
+            type="button"
             className="focus:outline-none font-medium rounded-lg text-sm px-4 py-2 bg-darkbg text-red-400 hover:text-white hover:bg-red-400"
             onClick={closeModal}
           >

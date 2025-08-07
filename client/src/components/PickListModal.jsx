@@ -1,24 +1,75 @@
-import React from "react";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
-const PickListModal = ({ isOpen, closeModal, createList }) => {
-  if (!isOpen) return null;
-  let foodLists = [
-    {
-      id: 1,
-      name: "Bulk List",
-    },
-    {
-      id: 2,
-      name: "Cut List",
-    },
-    { id: 3, name: "Keto List" },
-    { id: 4, name: "Fried rice Ingredients" },
-  ];
+const PickListModal = ({ isOpen, closeModal, createList, foodItem }) => {
+  const [foodLists, setFoodLists] = useState(null);
+  const hasInitialized = useRef(false); // A ref to check if initialization has occurred
+  let userId = JSON.parse(localStorage.getItem("userId"));
+
+  useEffect(() => {
+    if (!hasInitialized.current) {
+      fetchFoodLists();
+      hasInitialized.current = true; // Mark as initialized
+    }
+  }, []);
+
+  // fetch user's food lists from the servser
+  const fetchFoodLists = async () => {
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/food_lists/all`, {
+        params: {
+          userId: userId,
+        },
+      })
+      .then(function (response) {
+        let tmpList = [];
+        if (response.data) {
+          tmpList = response.data.map((foodList) => {
+            return {
+              id: foodList._id,
+              name: foodList.listName,
+            };
+          });
+        }
+        setFoodLists(tmpList);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const checkAndCloseModal = (event) => {
     if (event.target.id == "outer-modal") closeModal();
   };
 
+  // save food item to the selected list
+  const saveToList = async (listId) => {
+    console.log("foodItem to save: ", foodItem);
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/food`, {
+        userId: userId,
+        listId: listId,
+        food: {
+          name: foodItem.name,
+          alias: foodItem.alias,
+          image: foodItem.image,
+          unit: foodItem.unit || "g",
+          carbs: foodItem.carbs,
+          protein: foodItem.protein,
+          fats: foodItem.fats,
+          quantity: foodItem.quantity || 1,
+        },
+      })
+      .then(function (response) {
+        console.log("Food item saved to list successfully:", response.data);
+        closeModal();
+      })
+      .catch(function (error) {
+        console.error("Error saving food item to list:", error);
+      });
+  };
+
+  if (!isOpen) return null;
   return (
     <div
       className="flex justify-center items-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 bg-darkbg/75 w-full h-full"
@@ -35,7 +86,10 @@ const PickListModal = ({ isOpen, closeModal, createList }) => {
                 className="text-white p-3 sm:p-4 hover:bg-darkgray"
                 key={list.id}
               >
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                <div
+                  onClick={() => saveToList(list.id)}
+                  className="flex items-center space-x-4 rtl:space-x-reverse"
+                >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate text-white">
                       {list.name}
@@ -50,6 +104,7 @@ const PickListModal = ({ isOpen, closeModal, createList }) => {
           type="submit"
           className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
           onClick={() => {
+            closeModal();
             createList();
           }}
         >

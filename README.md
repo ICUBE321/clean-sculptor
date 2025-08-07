@@ -1,102 +1,142 @@
 # Clean Sculptor
 
-A nutrition-focused web application that helps users track and manage their food lists with caloric information.
-
-## Project Structure
-
-The project is split into two main parts:
-
-- `client/` - React frontend built with Vite
-- `server/` - Express.js backend with MongoDB
+A nutrition-focused web application that helps users track and manage their food lists with detailed nutritional information.
 
 ## Features
 
-- User authentication (signup/login)
-- Food search functionality
-- Create and manage food lists
-- Track nutritional information
-- Responsive design with Tailwind CSS
-- Profile management
+- **Food Search**: Search and browse food items with nutritional data
+- **List Management**: Create, view, and delete food lists
+- **Nutrition Tracking**: Track proteins, carbs, and fats for each food item
+- **Unit Conversion**: Support for both grams and kilograms
+- **User Authentication**: Secure login and signup functionality
 
 ## Tech Stack
 
 ### Frontend
 
-- React
-- React Router for navigation
+- React 18
+- React Router v6
 - Tailwind CSS for styling
+- Axios for API requests
 - Vite as build tool
 
 ### Backend
 
 - Node.js
 - Express.js
-- MongoDB for database
-- Mongoose as ODM
+- MongoDB with Mongoose
 - Express-validator for input validation
+- Edamam Food Database API integration
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js
+- Node.js >= 14
 - MongoDB
 - npm or yarn
+- Edamam API credentials
 
 ### Installation
 
-1. Clone the repository
+1. Clone the repository:
 
-2. Setup Backend:
+   ```bash
+   git clone https://github.com/yourusername/clean-sculptor.git
+   cd clean-sculptor
+   ```
 
-```sh
-cd server
-npm install
-# Create .env file with required environment variables:
-# ATLAS_URI=your_mongodb_connection_string
-# PORT=5000
-# CLIENT_DOMAIN=http://localhost:5173
-# SERVER_DOMAIN=http://localhost:5000
-npm start
-```
+2. Install Backend Dependencies:
 
-3. Setup Frontend:
+   ```bash
+   cd server
+   npm install
+   ```
 
-```sh
-cd client
-npm install
-# Create .env file if needed
-npm run dev
-```
+3. Configure Environment Variables: Create a `.env` file in the server directory:
 
-The client will be running on http://localhost:5173 and the server on http://localhost:5000.
+   ```
+   ATLAS_URI=your_mongodb_connection_string
+   PORT=5000
+   CLIENT_DOMAIN=http://localhost:5173
+   SERVER_DOMAIN=http://localhost:5000
+   ```
 
-## Environment Variables
+4. Install Frontend Dependencies:
 
-### Backend (.env)
+   ```bash
+   cd ../client
+   npm install
+   ```
 
-- ATLAS_URI: MongoDB connection string
-- PORT: Server port
-- CLIENT_DOMAIN: Frontend URL
-- SERVER_DOMAIN: Backend URL
+5. Create Frontend Environment Variables: Create a `.env` file in the client directory:
 
-### Frontend (.env)
+   ```
+   VITE_API_BASE_URL=http://localhost:5000
+   VITE_EDAMAM_APP_ID=your_edamam_app_id
+   VITE_EDAMAM_APP_KEY=your_edamam_app_key
+   ```
 
-- VITE_SERVER_URL: Backend API URL
+### Running the Application
+
+1. Start the Backend:
+
+   ```bash
+   cd server
+   npm start
+   ```
+
+2. Start the Frontend:
+
+   ```bash
+   cd client
+   npm run dev
+   ```
+
+The application will be available at `http://localhost:5173`
 
 ## API Endpoints
 
-### User Routes
+### Food Lists
 
-- POST /login - User login
-- GET /users - Get all users
-- GET /users/:id - Get user by ID
-- POST /users - Create new user
-- PUT /users/:id - Update user
-- DELETE /users/:id - Delete user
+- `GET /food_lists/all` - Get all food lists for a user
+- `GET /food_lists/:id` - Get specific food list
+- `POST /foods` - Create new food list
+- `DELETE /food_lists/:id` - Delete food list
 
-### Food Routes
+### Food Items
 
-- GET /foods/all - Get all food lists
-- GET /foods - Get food list
-- POST /foods - Save food list
+- `POST /food` - Add food item to list
+- `DELETE /food/:id` - Remove food item from list
+
+### Authentication
+
+- `POST /login` - User login
+- `POST /signup` - User registration
+
+## Development
+
+### Project Structure
+
+```
+clean-sculptor/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   └── App.jsx
+│   └── package.json
+└── server/
+    ├── routes/
+    ├── models/
+    ├── controllers/
+    └── package.json
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/NewFeature`
+3. Commit your changes: `git commit -m 'Add NewFeature'`
+4. Push to the branch: `git push origin feature/NewFeature`
+5. Submit a pull request

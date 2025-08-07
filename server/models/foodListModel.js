@@ -14,6 +14,22 @@ const foodListShema = new mongoose.Schema({
         required: true,
         type: String,
       },
+      alias: {
+        required: false,
+        type: String,
+      },
+      image: {
+        required: false,
+        type: String,
+      },
+      calories: {
+        required: false,
+        type: Number,
+      },
+      unit: {
+        required: true,
+        type: String,
+      },
       carbs: {
         required: true,
         type: Number,
@@ -25,6 +41,11 @@ const foodListShema = new mongoose.Schema({
       fats: {
         required: true,
         type: Number,
+      },
+      quantity: {
+        required: true,
+        type: Number,
+        default: 1,
       },
     },
   ],

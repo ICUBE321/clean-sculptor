@@ -7,7 +7,6 @@ const foodListModel = require("../models/foodListModel");
 const searchFood = (request, response) => {
   //logic to query food database api for an item
   const name = request.params.name;
-  console.log(`${name} was queried for`);
   response.status(200).json({
     name: name,
     carbs: 0,
@@ -17,136 +16,231 @@ const searchFood = (request, response) => {
 };
 
 // to retrieve all the user's food lists
-const getAllFoodLists = async (request, response) => {
+const getAllUserFoodLists = async (request, response) => {
   const userId = request.query.userId;
   try {
     const allFoodLists = await foodListModel.find({ userId: userId });
-    response.json(allFoodLists);
+    return response.status(200).json(allFoodLists);
   } catch (error) {
-    response.status(500).json({ message: error.message });
+    return response.status(500).json({ message: error.message });
   }
 };
 
 // to retrieve a user's specific food list
-const getFoodList = async (request, response) => {
+const getSpecificFoodList = async (request, response) => {
   const userId = request.query.userId;
-  const listName = request.query.listName;
+  const listId = request.query.listId;
   try {
     const foodList = await foodListModel.findOne({
       userId: userId,
-      listName: listName,
+      _id: listId,
     });
 
     if (foodList) {
-      response.json(foodList);
+      return response.status(200).json(foodList);
     } else {
       // found nothing
-      response.status(400).json({ message: "This list does not exist" });
+      return response.status(400).json({ message: "This list does not exist" });
     }
   } catch (error) {
-    response.status(500).json({ message: error.message });
+    return response.status(500).json({ message: error.message });
   }
 };
 
-// to save a new foodlist
-const saveFoodList = async (request, response) => {
-  const validData = matchedData(request);
-  const userId = validData.userId;
-  const listName = validData.listName;
-  let listExists = await foodListModel.exists({
-    userId: userId,
-    listName: listName,
-  });
-  if (listExists) {
-    // return to the user a message saying the list name already exists
-    response.status(400).json({ message: "This list name is already in use." });
-  } else {
-    //create a new list object and save it
-    let newFoodList = new foodListModel({
-      userId: userId,
-      listName: listName,
-      foods: [
-        {
-          name: validData.foods[0].name,
-          carbs: validData.foods[0].carbs,
-          protein: validData.foods[0].protein,
-          fats: validData.foods[0].fats,
-        },
-      ],
-    });
+// to save a new food list including the food items in it
+const saveSpecificFoodList = async (request, response) => {
+  const { userId, listName, foods } = request.body;
 
-    try {
-      const listToSave = await newFoodList.save();
-      response.status(200).json(listToSave);
-    } catch (error) {
-      response.status(400).json({ message: error.message });
+  try {
+    const listExists = await foodListModel.exists({ userId, listName });
+    if (listExists) {
+      // return to the user a message saying the list name already exists
+      return response
+        .status(400)
+        .json({ message: "This list name is already in use." });
+    } else {
+      // map food items first
+      const formattedFoods = foods.map((food) => ({
+        name: food.name,
+        alias: food.alias,
+        image: food.image,
+        calories: food.calories,
+        unit: food.unit,
+        carbs: food.carbs,
+        protein: food.protein,
+        fats: food.fats,
+        quantity: food.quantity,
+      }));
+
+      //create a new list object and save it
+      const newFoodList = new foodListModel({
+        userId,
+        listName,
+        foods: formattedFoods,
+      });
+
+      const savedList = await newFoodList.save();
+      return response.status(200).json(savedList);
     }
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
   }
 };
 
-const saveFood = async (request, response) => {
-  const validData = matchedData(request);
-  // find the food document using user id
-  const userId = validData.userId;
-  const foodId = await FoodModel.exists({ userId: userId });
-  console.log(`does food id for user id ${userId} is: ${foodId}`);
-  // and if it exists
-  if (foodId == null) {
-    //if null add new food document
-    let food = new FoodModel({
-      userId: userId,
-      foods: [
-        {
-          name: validData.name,
-          carbs: validData.carbs,
-          protein: validData.protein,
-          fats: validData.fats,
-        },
-      ],
+// function to save a food item to a specific list
+const saveFoodToList = async (request, response) => {
+  const { userId, listId, food } = request.body;
+
+  try {
+    let listExists = await foodListModel.exists({
+      userId,
+      _id: listId,
     });
 
-    try {
-      const foodToSave = await food.save();
-      response.status(200).json(foodToSave);
-    } catch (error) {
-      response.status(400).json({ message: error.message });
-    }
-  } else {
-    // append new food item to the foods list, else create new doc
-    let foodItem = {
-      name: validData.name,
-      carbs: validData.carbs,
-      protein: validData.protein,
-      fats: validData.fats,
-    };
-
-    try {
-      const foodToUpdate = await FoodModel.findByIdAndUpdate(
-        foodId,
-        { $push: { foods: foodItem } },
+    if (!listExists) {
+      return response
+        .status(400)
+        .json({ message: "This list does not exist." });
+    } else {
+      const updatedList = await foodListModel.findOneAndUpdate(
+        { userId, _id: listId },
+        { $push: { foods: food } },
         { new: true }
       );
-      response.status(200).json(foodToUpdate);
-    } catch (error) {
-      response.status(400).json({ message: error.message });
+      return response.status(200).json(updatedList);
     }
+  } catch (error) {
+    return esponse.status(400).json({ message: error.message });
   }
 };
 
-const deleteFood = async (request, response) => {
-  const userId = request.query.userId;
-  const foodId = request.query.foodId;
+// function to create an empty food list
+const createEmptyFoodList = async (request, response) => {
+  const { userId, listName } = request.body;
 
-  // const res = await FoodModel.findOneAndDelete({ userId: userId });
-  console.log(`food with id:${foodId} to be deleted for user ${userId}`);
-  response.send(`food with id:${foodId} to be deleted for user ${userId}`);
+  try {
+    let listExists = await foodListModel.exists({
+      userId: userId,
+      listName: listName,
+    });
+
+    if (listExists) {
+      // return to the user a message saying the list name already exists
+      return response
+        .status(400)
+        .json({ message: "This list name is already in use." });
+    } else {
+      //create a new list object and save it
+      let newFoodList = new foodListModel({
+        userId: userId,
+        listName: listName,
+        foods: [],
+      });
+
+      const listToSave = await newFoodList.save();
+      return response.status(200).json(listToSave);
+    }
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
+  }
+};
+
+// function to delete a food item from a specific list
+const deleteFoodFromList = async (request, response) => {
+  const userId = request.query.userId;
+  const listId = request.query.listId;
+  const foodName = request.query.foodName;
+
+  try {
+    const deletedFood = await foodListModel.updateOne(
+      { _id: listId, userId: userId },
+      { $pull: { foods: { name: foodName } } }
+    );
+    if (deletedFood.modifiedCount > 0) {
+      return response
+        .status(200)
+        .json({ message: "Food deleted successfully." });
+    } else {
+      return response
+        .status(404)
+        .json({ message: "Food not found in the list." });
+    }
+  } catch (error) {
+    console.error("Error deleting food:", error);
+  }
+};
+
+// function to delete a food list
+const deleteFoodList = async (request, response) => {
+  const userId = request.query.userId;
+  const listId = request.query.listId;
+
+  try {
+    const deletedList = await foodListModel.findOneAndDelete({
+      userId: userId,
+      _id: listId,
+    });
+    if (deletedList) {
+      response.status(200).json({ message: "List deleted successfully." });
+    } else {
+      response.status(404).json({ message: "List not found." });
+    }
+  } catch (error) {
+    response.status(400).json({ message: error.message });
+  }
+};
+
+// function to update a specific food list
+const updateSpecificFoodList = async (request, response) => {
+  const { userId, listId, listName, foods } = request.body;
+
+  try {
+    const updatedList = await foodListModel.findOneAndUpdate(
+      { userId, _id: listId },
+      { listName: listName, foods: foods },
+      { new: true }
+    );
+
+    if (updatedList) {
+      return response.status(200).json(updatedList);
+    } else {
+      return response.status(404).json({ message: "List not found." });
+    }
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
+  }
+};
+
+// function to update a food item in a specific list
+const updateFoodItem = async (request, response) => {
+  const { userId, listId, food } = request.body;
+
+  try {
+    const updatedList = await foodListModel.findOneAndUpdate(
+      { userId, _id: listId, "foods.name": food.name },
+      { $set: { "foods.$": food } },
+      { new: true }
+    );
+
+    if (updatedList) {
+      return response.status(200).json(updatedList);
+    } else {
+      return response.status(404).json({ message: "Food item not found." });
+    }
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
+  }
 };
 
 module.exports = {
   searchFood,
-  getAllFoodLists,
-  getFoodList,
-  saveFoodList,
-  saveFood,
-  deleteFood,
+  getAllUserFoodLists,
+  getSpecificFoodList,
+  saveSpecificFoodList,
+  saveFoodToList,
+  deleteFoodFromList,
+  createEmptyFoodList,
+  deleteFoodList,
+  updateSpecificFoodList,
+  updateFoodItem,
 };

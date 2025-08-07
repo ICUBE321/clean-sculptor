@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Logout = ({ removeToken }) => {
@@ -12,7 +11,7 @@ const Logout = ({ removeToken }) => {
     <div className="my-20">
       <div className="text-center">
         <svg
-          class="mx-auto mb-10 w-20 h-20 text-lightblue"
+          className="mx-auto mb-10 w-20 h-20 text-lightblue"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -20,9 +19,9 @@ const Logout = ({ removeToken }) => {
         >
           <path
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
           />
         </svg>
@@ -34,7 +33,7 @@ const Logout = ({ removeToken }) => {
           className="focus:outline-none font-medium rounded-lg text-lg px-5 py-2.5 bg-darkbg text-red-400 hover:text-white hover:bg-red-400 mr-5"
           onClick={logout}
         >
-          Yes, I'm sure
+          Yes, I&apos;m sure
         </button>
         <button
           type="button"
