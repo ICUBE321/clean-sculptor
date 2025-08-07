@@ -5,6 +5,7 @@ require("dotenv").config({
     `.env.${process.env.NODE_ENV || "development"}`
   ),
 });
+console.log(`Environment: ${process.env.NODE_ENV}`);
 const mongoString = process.env.MONGO_URI;
 
 const express = require("express");
