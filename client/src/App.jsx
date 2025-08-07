@@ -5,7 +5,7 @@ import SignupPage from "./pages/SignupPage";
 import Navbar from "./components/Navbar";
 import SearchPage from "./pages/SearchPage";
 import ListsPage from "./pages/ListsPage";
-import ProfilePage from "./pages/ProfilePage";
+// import ProfilePage from "./pages/ProfilePage";
 import SearchItemPage from "./pages/SearchItemPage";
 import ListItemPage from "./pages/ListItemPage";
 import ListPage from "./pages/ListPage";
@@ -16,7 +16,6 @@ function App() {
   const { token, setToken, removeToken } = useToken();
   const [foodData, setFoodData] = useState();
   let location = useLocation();
-  console.log("Current path:", location.pathname);
   return (
     <div className="bg-darkbg h-screen font-sans">
       <Navbar tokenExists={token} />

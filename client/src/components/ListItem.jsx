@@ -61,7 +61,7 @@ const ListItem = () => {
         },
       })
       .then((response) => {
-        console.log("Food item deleted successfully:", response.data);
+        console.log("Food item deleted successfully");
         // navigate back to list page
         navigate(`/list/${listId}`, {
           state: { listId: listId, listName: "" },
@@ -90,7 +90,7 @@ const ListItem = () => {
         },
       })
       .then((response) => {
-        console.log("Food item updated successfully:", response.data);
+        console.log("Food item updated successfully");
         setIsModifying(false);
       })
       .catch((error) => {

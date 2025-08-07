@@ -24,7 +24,6 @@ const List = () => {
 
   // get food items in user list
   const getAllFoodItems = async () => {
-    console.log(`List id: ${listId}, list name: ${listName}`);
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/food_list/`, {
         params: {
@@ -33,7 +32,6 @@ const List = () => {
         },
       })
       .then((response) => {
-        console.log("Food items in list:", response.data);
         let listData = response.data;
         let parsedList = {
           id: listData._id,
@@ -89,7 +87,7 @@ const List = () => {
         foods: currentList.foods,
       })
       .then((response) => {
-        console.log("List updated successfully:", response.data);
+        console.log("List updated successfully");
         setIsModifying(false);
         getAllFoodItems(); // Refresh the list after updating
       })
