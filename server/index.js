@@ -30,6 +30,19 @@ app.use(express.json());
 
 const user = require("./routes/user");
 const food = require("./routes/food");
+
+const {
+  createUserValidation,
+  loginUserValidation,
+  userIdValidation,
+} = require("./middleware/validators/userValidator");
+
+const {
+  saveFoodValidation,
+  getFoodsValidation,
+  deleteFoodValidation,
+} = require("./middleware/validators/foodValidator");
+
 const port = process.env.PORT;
 
 //define the CORS options
@@ -51,12 +64,12 @@ app.get("/", function (request, response) {
 });
 
 // user endpoints
-app.post("/login", user.loginUser);
+app.post("/login", loginUserValidation, user.loginUser);
 app.get("/users", user.getUsers);
-app.get("/users/:id", user.getUserById);
-app.post("/users", user.createUser);
-app.put("/users/:id", user.updateUser);
-app.delete("/users/:id", user.deleteUser);
+app.get("/users/:id", userIdValidation, user.getUserById);
+app.post("/users", createUserValidation, user.createUser);
+app.put("/users/:id", userIdValidation, user.updateUser);
+app.delete("/users/:id", userIdValidation, user.deleteUser);
 
 // food endpoints
 app.get("/food_lists/all", food.getAllUserFoodLists);
