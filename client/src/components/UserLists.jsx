@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Import BrowserRouter and Link
 import NewListModal from "./NewListModal";
 import axios from "axios";
@@ -6,7 +6,6 @@ import axios from "axios";
 const UserLists = () => {
   const [foodLists, setFoodLists] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const hasInitialized = useRef(false); // A ref to check if initialization has occurred
   let userId = JSON.parse(localStorage.getItem("userId"));
 
   useEffect(() => {

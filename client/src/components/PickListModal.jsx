@@ -13,7 +13,7 @@ const PickListModal = ({ isOpen, closeModal, createList, foodItem }) => {
     }
   }, []);
 
-  // fetch user's food lists from the server
+  // fetch user's food lists from the servser
   const fetchFoodLists = async () => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/food_lists/all`, {
@@ -44,6 +44,7 @@ const PickListModal = ({ isOpen, closeModal, createList, foodItem }) => {
 
   // save food item to the selected list
   const saveToList = async (listId) => {
+    console.log("foodItem to save: ", foodItem);
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/food`, {
         userId: userId,
@@ -56,6 +57,7 @@ const PickListModal = ({ isOpen, closeModal, createList, foodItem }) => {
           carbs: foodItem.carbs,
           protein: foodItem.protein,
           fats: foodItem.fats,
+          quantity: foodItem.quantity || 1,
         },
       })
       .then(function (response) {

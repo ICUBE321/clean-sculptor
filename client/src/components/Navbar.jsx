@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink } from "react-router-dom"; // Import BrowserRouter and Link
 
 const Navbar = ({ tokenExists }) => {
@@ -105,7 +104,7 @@ const Navbar = ({ tokenExists }) => {
                 Lists
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink
                 to="/profile"
                 className={({ isActive }) => {
@@ -119,7 +118,7 @@ const Navbar = ({ tokenExists }) => {
               >
                 Profile
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/logout"

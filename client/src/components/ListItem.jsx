@@ -1,34 +1,22 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import PickListModal from "./PickListModal";
-import NewListModal from "./NewListModal";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ListItem = () => {
   // grabbing the passed location state variables
   const location = useLocation();
   const { foodItem, listId } = location.state || {};
-
-  // for pick list modal
-  const [isPickListModalOpen, setIsPickListModalOpen] = useState(false);
-
-  const openPickListModal = () => setIsPickListModalOpen(true);
-  const closePickListModal = () => setIsPickListModalOpen(false);
-
-  const [isNewListModalOpen, setIsNewListModalOpen] = useState(false);
-
+  let userId = JSON.parse(localStorage.getItem("userId"));
   const [isModifying, setIsModifying] = useState(false);
+  const navigate = useNavigate();
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(foodItem?.quantity || 1);
   const [unit, setUnit] = useState("g");
   const [nutrients, setNutrients] = useState({
     proteins: foodItem?.protein,
     carbs: foodItem?.carbs,
     fats: foodItem?.fats,
   });
-
-  const closeNewListModal = () => {
-    setIsNewListModalOpen(false);
-  };
 
   const calculateNutirents = (newQuantity, newUnit) => {
     if (!foodItem) return;
@@ -62,8 +50,52 @@ const ListItem = () => {
     calculateNutirents(quantity, newUnit);
   };
 
-  const handleCreateList = () => {
-    setIsNewListModalOpen(true);
+  // function to handle deletion of the food item from list
+  const handleDelete = () => {
+    axios
+      .delete(`${import.meta.env.VITE_API_BASE_URL}/food`, {
+        params: {
+          userId: userId,
+          listId: listId,
+          foodName: foodItem.name,
+        },
+      })
+      .then((response) => {
+        console.log("Food item deleted successfully:", response.data);
+        // navigate back to list page
+        navigate(`/list/${listId}`, {
+          state: { listId: listId, listName: "" },
+        });
+      })
+      .catch((error) => {
+        console.error("Error deleting food item:", error);
+      });
+  };
+
+  // function to update the food item
+  const handleUpdate = () => {
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/food/update`, {
+        userId: userId,
+        listId: listId,
+        food: {
+          name: foodItem.name,
+          alias: foodItem.alias,
+          image: foodItem.image,
+          unit: unit,
+          carbs: nutrients.carbs,
+          protein: nutrients.proteins,
+          fats: nutrients.fats,
+          quantity: quantity,
+        },
+      })
+      .then((response) => {
+        console.log("Food item updated successfully:", response.data);
+        setIsModifying(false);
+      })
+      .catch((error) => {
+        console.error("Error updating food item:", error);
+      });
   };
 
   return (
@@ -71,6 +103,7 @@ const ListItem = () => {
       <div className="flex justify-between">
         <Link
           to={`/list/${listId}`}
+          state={{ listId: listId, listName: "" }}
           type="button"
           className="self-start text-darkblue bg-transparent hover:bg-darkblue hover:text-darkbg focus:ring-4 focus:outline-none focus:ring-transparent font-medium rounded-full text-lg p-2.5 text-center inline-flex items-center me-2"
         >
@@ -90,45 +123,19 @@ const ListItem = () => {
         </Link>
         <button
           type=""
-          onClick={() =>
-            isModifying ? setIsModifying(false) : setIsModifying(true)
-          }
+          onClick={() => {
+            if (isModifying) {
+              handleUpdate();
+            } else {
+              setIsModifying(true);
+            }
+          }}
           className="self-end border font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue focus:ring-blue-800"
         >
           {isModifying ? "SAVE" : "MODIFY"}
         </button>
       </div>
       <div className="flex flex-row items-center w-full">
-        <PickListModal
-          isOpen={isPickListModalOpen}
-          closeModal={closePickListModal}
-          createList={handleCreateList}
-          foodItem={{
-            name: foodItem?.name,
-            alias: foodItem?.alias,
-            image: foodItem?.image,
-            unit: foodItem?.unit || "g",
-            carbs: nutrients.carbs,
-            protein: nutrients.proteins,
-            fats: nutrients.fats,
-          }}
-        />
-        <NewListModal
-          isOpen={isNewListModalOpen}
-          closeModal={closeNewListModal}
-          foods={[
-            {
-              name: foodItem?.name,
-              alias: foodItem?.alias,
-              image: foodItem?.image,
-              unit: foodItem?.unit || "g",
-              carbs: nutrients.carbs,
-              protein: nutrients.proteins,
-              fats: nutrients.fats,
-            },
-          ]}
-          openMode="search"
-        />
         <div className="grow flex flex-row p-10">
           <div className="p-10 w-1/3">
             <img
@@ -156,36 +163,53 @@ const ListItem = () => {
               </p>
             </div>
             <div className="mb-5">
-              <select
-                id="underline_select"
-                className="block py-2.5 px-0 w-1/5 text-sm text-darkblue bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                value={unit}
-                onChange={handleUnitChange}
-              >
-                <option defaultChecked value="g">
-                  grams
-                </option>
-                <option value="kg">kilograms</option>
-              </select>
+              {isModifying ? (
+                <select
+                  id="underline_select"
+                  className="block py-2.5 px-0 w-1/5 text-sm text-darkblue bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                  value={unit}
+                  onChange={handleUnitChange}
+                >
+                  <option defaultChecked value="g">
+                    grams
+                  </option>
+                  <option value="kg">kilograms</option>
+                </select>
+              ) : (
+                <p className="block py-2.5 px-0 w-1/5 text-sm text-darkblue bg-transparent border-0 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                  {unit == "g" ? "grams" : "kilograms"}
+                </p>
+              )}
             </div>
             <div className="text-darkblue">
               <label htmlFor="number-input" className="text-sm mr-3">
-                Choose quantity:
+                {isModifying ? "Choose quantity:" : "Quantity:"}
               </label>
-              <input
-                type="number"
-                value={quantity}
-                onChange={handleQuantityChange}
-                name=""
-                id="number-input"
-                className="text-sm p-2 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0"
-              />
+              {isModifying ? (
+                <input
+                  type="number"
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  name=""
+                  id="number-input"
+                  className="text-sm p-2 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0"
+                />
+              ) : (
+                <p className="text-sm p-2 bg-transparent border-0 appearance-none focus:outline-none focus:ring-0">
+                  {quantity}
+                </p>
+              )}
             </div>
           </div>
         </div>
-        <button className="self-end text-center me-2 mb-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 bg-darkbg text-red-400 hover:text-white hover:bg-red-400">
-          DELETE
-        </button>
+        {!isModifying && (
+          <button
+            className="self-end text-center me-2 mb-2 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 bg-darkbg text-red-400 hover:text-white hover:bg-red-400"
+            onClick={handleDelete}
+          >
+            DELETE
+          </button>
+        )}
       </div>
     </div>
   );

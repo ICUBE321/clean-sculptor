@@ -93,66 +93,6 @@ const SearchFood = ({ foodData, setFoodData }) => {
     setFoodData(parsedFoodList);
   };
 
-  // function handleItemSelected(foodId) {
-  //   console.log(`item with id: ${foodId} selected!`);
-  //   // use id to find the ingredients value in
-  //   //the foodData and use to populate the selectedFood variable
-  //   const pickedItem = foodData.find((item) => {
-  //     if (item.id == foodId) {
-  //       console.log(`item details: id-${item.id} and name-${item.name}`);
-  //       return item;
-  //     }
-  //   });
-  //   // navigate to Item component or use it as the displayed component
-  //   edamamApiCallFoodData(pickedItem);
-  // }
-
-  // // To get data on specific user-selected food
-  // function edamamApiCallFoodData(item) {
-  //   let url =
-  //     "https://api.edamam.com/api/food-database/v2/nutrients?app_id=0ac97a9d&app_key=37ae6336466c5bf7c4328965b8cab27d";
-  //   let ingredientsObj = item.ingredients[0];
-
-  //   // ensure quaifiers is passed into the api call as an array
-  //   if (ingredientsObj.qualifiers == null || ingredientsObj.qualifiers == "")
-  //     ingredientsObj.qualifiers = [];
-  //   console.log(ingredientsObj.qualifiers);
-  //   axios
-  //     .post(url, {
-  //       ingredients: [
-  //         {
-  //           quantity: ingredientsObj.quantity,
-  //           measureURI: ingredientsObj.measureURI,
-  //           qualifiers: ingredientsObj.qualifiers,
-  //           foodId: ingredientsObj.foodId,
-  //         },
-  //       ],
-  //     })
-  //     .then((response) => {
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-
-  // function parseNutritionalResponse(foodItem, nutriResp) {
-  //   console.log(nutriResp);
-  //   setSelectedFood({
-  //     id: foodItem.id,
-  //     name: foodItem.name,
-  //     alias: foodItem.alias,
-  //     image: foodItem.image,
-  //     calories: nutriResp.calories,
-  //     unit: "g",
-  //     protein: nutriResp.totalNutrients.PROCNT.quantity,
-  //     carbs: nutriResp.totalNutrients.CHOCDF.quantity,
-  //     fats: nutriResp.totalNutrients.FAT.quantity,
-  //   });
-
-  //   console.log(selectedFood);
-  // }
-
   return (
     <div className="my-20">
       <PickListModal

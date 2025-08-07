@@ -13,6 +13,8 @@ const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
 
   // function to create a new list
   const createList = (e) => {
+    console.log("foodItem to save: ", foods[0]);
+
     e.preventDefault();
     console.log("Creating list for user:", userId, "with name:", listName);
     axios
@@ -28,6 +30,7 @@ const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
             carbs: foods[0]?.carbs,
             protein: foods[0]?.protein,
             fats: foods[0]?.fats,
+            quantity: foods[0]?.quantity || 1,
           },
         ],
       })

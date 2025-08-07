@@ -6,7 +6,6 @@ const foodListModel = require("../models/foodListModel");
 const searchFood = (request, response) => {
   //logic to query food database api for an item
   const name = request.params.name;
-  console.log(`${name} was queried for`);
   response.status(200).json({
     name: name,
     carbs: 0,
@@ -69,6 +68,7 @@ const saveSpecificFoodList = async (request, response) => {
         carbs: food.carbs,
         protein: food.protein,
         fats: food.fats,
+        quantity: food.quantity,
       }));
 
       //create a new list object and save it
@@ -77,8 +77,6 @@ const saveSpecificFoodList = async (request, response) => {
         listName,
         foods: formattedFoods,
       });
-
-      console.log(newFoodList);
 
       const savedList = await newFoodList.save();
       return response.status(200).json(savedList);
@@ -98,18 +96,11 @@ const saveFoodToList = async (request, response) => {
       _id: listId,
     });
 
-    console.log(
-      `userId: ${userId}, listName: ${listId}, listExists: ${listExists}`
-    );
-
     if (!listExists) {
       return response
         .status(400)
         .json({ message: "This list does not exist." });
     } else {
-      console.log(
-        `Adding food ${food.name} to list ${listId} for user ${userId}`
-      );
       const updatedList = await foodListModel.findOneAndUpdate(
         { userId, _id: listId },
         { $push: { foods: food } },
@@ -145,8 +136,6 @@ const createEmptyFoodList = async (request, response) => {
         foods: [],
       });
 
-      console.log(newFoodList);
-
       const listToSave = await newFoodList.save();
       return response.status(200).json(listToSave);
     }
@@ -155,17 +144,33 @@ const createEmptyFoodList = async (request, response) => {
   }
 };
 
-const deleteFood = async (request, response) => {
+// function to delete a food item from a specific list
+const deleteFoodFromList = async (request, response) => {
   const userId = request.query.userId;
-  const foodId = request.query.foodId;
+  const listId = request.query.listId;
+  const foodName = request.query.foodName;
 
-  // const res = await FoodModel.findOneAndDelete({ userId: userId });
-  console.log(`food with id:${foodId} to be deleted for user ${userId}`);
-  response.send(`food with id:${foodId} to be deleted for user ${userId}`);
+  try {
+    const deletedFood = await foodListModel.updateOne(
+      { _id: listId, userId: userId },
+      { $pull: { foods: { name: foodName } } }
+    );
+    if (deletedFood.modifiedCount > 0) {
+      return response
+        .status(200)
+        .json({ message: "Food deleted successfully." });
+    } else {
+      return response
+        .status(404)
+        .json({ message: "Food not found in the list." });
+    }
+  } catch (error) {
+    console.error("Error deleting food:", error);
+  }
 };
 
 // function to delete a food list
-const deleteList = async (request, response) => {
+const deleteFoodList = async (request, response) => {
   const userId = request.query.userId;
   const listId = request.query.listId;
 
@@ -196,10 +201,30 @@ const updateSpecificFoodList = async (request, response) => {
     );
 
     if (updatedList) {
-      console.log("Updated list:", updatedList);
       return response.status(200).json(updatedList);
     } else {
       return response.status(404).json({ message: "List not found." });
+    }
+  } catch (error) {
+    return response.status(400).json({ message: error.message });
+  }
+};
+
+// function to update a food item in a specific list
+const updateFoodItem = async (request, response) => {
+  const { userId, listId, food } = request.body;
+
+  try {
+    const updatedList = await foodListModel.findOneAndUpdate(
+      { userId, _id: listId, "foods.name": food.name },
+      { $set: { "foods.$": food } },
+      { new: true }
+    );
+
+    if (updatedList) {
+      return response.status(200).json(updatedList);
+    } else {
+      return response.status(404).json({ message: "Food item not found." });
     }
   } catch (error) {
     return response.status(400).json({ message: error.message });
@@ -212,8 +237,9 @@ module.exports = {
   getSpecificFoodList,
   saveSpecificFoodList,
   saveFoodToList,
-  deleteFood,
+  deleteFoodFromList,
   createEmptyFoodList,
-  deleteList,
+  deleteFoodList,
   updateSpecificFoodList,
+  updateFoodItem,
 };

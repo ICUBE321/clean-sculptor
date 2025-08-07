@@ -48,6 +48,7 @@ const List = () => {
               carbs: food.carbs,
               protein: food.protein,
               fats: food.fats,
+              quantity: food.quantity,
             };
           }),
         };
@@ -78,7 +79,7 @@ const List = () => {
     });
   };
 
-  // functinon to update the food list
+  // function to update the food list
   const handleListUpdate = async () => {
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/food_list/update`, {
@@ -227,7 +228,11 @@ const List = () => {
               ) : (
                 <Link
                   to={"/list_item/" + food.id}
-                  state={{ openMode: "item", foodItem: food, listId: listId }}
+                  state={{
+                    openMode: "item",
+                    foodItem: food,
+                    listId: currentList.id,
+                  }}
                   className="flex items-center justify-center space-x-4 rtl:space-x-reverse"
                 >
                   <div className="flex-shrink-0">

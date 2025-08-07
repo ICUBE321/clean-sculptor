@@ -16,7 +16,7 @@ const SearchItem = () => {
 
   const [isNewListModalOpen, setIsNewListModalOpen] = useState(false);
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(foodItem?.quantity || 1);
   const [unit, setUnit] = useState("g");
   const [nutrients, setNutrients] = useState({
     proteins: foodItem?.protein,
@@ -96,10 +96,11 @@ const SearchItem = () => {
             name: foodItem?.name,
             alias: foodItem?.alias,
             image: foodItem?.image,
-            unit: foodItem?.unit || "g",
+            unit: unit || "g",
             carbs: nutrients.carbs,
             protein: nutrients.proteins,
             fats: nutrients.fats,
+            quantity: quantity,
           }}
         />
         <NewListModal
@@ -110,10 +111,11 @@ const SearchItem = () => {
               name: foodItem?.name,
               alias: foodItem?.alias,
               image: foodItem?.image,
-              unit: foodItem?.unit || "g",
+              unit: unit || "g",
               carbs: nutrients.carbs,
               protein: nutrients.proteins,
               fats: nutrients.fats,
+              quantity: quantity,
             },
           ]}
           openMode="food"

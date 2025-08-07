@@ -40,7 +40,7 @@ function App() {
           <Route path="list_item/:id" element={<ListItemPage />} />
           <Route path="lists" element={<ListsPage />} />
           <Route path="list/:id" element={<ListPage />} />
-          <Route path="profile" element={<ProfilePage />} />
+          {/* <Route path="profile" element={<ProfilePage />} /> */}
           <Route
             path="logout"
             element={<LogoutPage removeToken={removeToken} />}

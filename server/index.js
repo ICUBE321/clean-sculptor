@@ -65,8 +65,9 @@ app.post("/food", food.saveFoodToList);
 app.post("/foods", food.saveSpecificFoodList);
 app.post("/foods/empty", food.createEmptyFoodList);
 app.post("/food_list/update", food.updateSpecificFoodList);
-app.delete("/foods", food.deleteFood);
-app.delete("/food_list", food.deleteList);
+app.post("/food/update", food.updateFoodItem);
+app.delete("/food", food.deleteFoodFromList);
+app.delete("/food_list", food.deleteFoodList);
 
 // Start the server
 app.listen(port, () => {
