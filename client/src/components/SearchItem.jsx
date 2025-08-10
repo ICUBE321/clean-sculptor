@@ -2,8 +2,14 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import PickListModal from "./PickListModal";
 import NewListModal from "./NewListModal";
+import { object, number } from "yup";
 
 const SearchItem = () => {
+  // validation schema
+  const foodItemSchema = object({
+    quantity: number().required().min(1, "Quantity should be greater than 0"),
+  });
+
   // grabbing the passed location state variables
   const location = useLocation();
   const { foodItem } = location.state || {};
@@ -23,6 +29,7 @@ const SearchItem = () => {
     carbs: foodItem?.carbs,
     fats: foodItem?.fats,
   });
+  const [quantityError, setQuantityError] = useState("");
 
   const closeNewListModal = () => {
     setIsNewListModalOpen(false);
@@ -62,6 +69,23 @@ const SearchItem = () => {
 
   const handleCreateList = () => {
     setIsNewListModalOpen(true);
+  };
+
+  const handleAddItem = (e) => {
+    e.preventDefault();
+
+    setQuantityError("");
+    try {
+      foodItemSchema.validateSync({ quantity }, { abortEarly: false });
+    } catch (error) {
+      error.inner.forEach((err) => {
+        if (err.path === "quantity") {
+          setQuantityError(err.message);
+        }
+      });
+      return;
+    }
+    openPickListModal();
   };
 
   return (
@@ -167,19 +191,21 @@ const SearchItem = () => {
                 type="number"
                 value={quantity}
                 onChange={handleQuantityChange}
-                name=""
+                min={1}
                 id="number-input"
-                className="text-sm p-2 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0"
+                className={`text-sm p-2 bg-transparent border-0 border-b-2 ${
+                  quantityError && "border-red-500"
+                } appearance-none focus:outline-none focus:ring-0`}
               />
+              {quantityError && (
+                <p className="mt-2 text-sm text-red-500">{quantityError}</p>
+              )}
             </div>
           </div>
         </div>
         <button
           type="submit"
-          onClick={(e) => {
-            e.preventDefault();
-            openPickListModal();
-          }}
+          onClick={handleAddItem}
           className="self-end text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-blue-800"
         >
           ADD ITEM

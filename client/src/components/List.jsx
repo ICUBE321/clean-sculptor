@@ -87,7 +87,6 @@ const List = () => {
         foods: currentList.foods,
       })
       .then((response) => {
-        console.log("List updated successfully");
         setIsModifying(false);
         getAllFoodItems(); // Refresh the list after updating
       })

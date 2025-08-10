@@ -1,22 +1,55 @@
 import { useState } from "react";
 import axios from "axios";
+import { object, string, number } from "yup";
 
 const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
   const userId = JSON.parse(localStorage.getItem("userId"));
-  console.log("Foods: ", foods);
   const checkAndCloseModal = (event) => {
     if (event.target.id == "outer-modal") closeModal();
   };
 
   const [listName, setListName] = useState("");
   const [calories, setCalories] = useState(0);
+  const [listNameError, setListNameError] = useState("");
+  const [caloriesError, setCaloriesError] = useState("");
+
+  if (!isOpen) return null;
+
+  // validation schema
+  const listSchema = object({
+    listName: string().trim().required("List name is required"),
+    calories: number().min(0, "Calories must be a positive number"),
+  });
 
   // function to create a new list
   const createList = (e) => {
-    console.log("foodItem to save: ", foods[0]);
-
     e.preventDefault();
-    console.log("Creating list for user:", userId, "with name:", listName);
+
+    try {
+      listSchema.validateSync(
+        {
+          listName,
+          calories,
+        },
+        { abortEarly: false }
+      );
+    } catch (error) {
+      // reset previous errors
+      setListNameError("");
+      setCaloriesError("");
+
+      // handle each validation error
+      error.inner.forEach((err) => {
+        if (err.path === "listName") {
+          setListNameError(err.message);
+        }
+        if (err.path === "calories") {
+          setCaloriesError(err.message);
+        }
+      });
+      return;
+    }
+
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/foods`, {
         userId: userId,
@@ -35,7 +68,6 @@ const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
         ],
       })
       .then((response) => {
-        console.log("List created successfully:", response.data);
         setListName("");
         setCalories(0);
         // navigate to search page
@@ -43,18 +75,40 @@ const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
       })
       .catch((error) => {
         console.error("Error creating list:", error);
+        if (error.response?.data?.message) {
+          setListNameError(error.response.data.message);
+        }
       });
   };
 
   // function to create an empty list
   const createEmptyList = (e) => {
     e.preventDefault();
-    console.log(
-      "Creating empty list for user:",
-      userId,
-      "with name:",
-      listName
-    );
+
+    try {
+      listSchema.validateSync(
+        {
+          listName,
+          calories,
+        },
+        { abortEarly: false }
+      );
+    } catch (error) {
+      // reset previous errors
+      setListNameError("");
+      setCaloriesError("");
+
+      // handle each validation error
+      error.inner.forEach((err) => {
+        if (err.path === "listName") {
+          setListNameError(err.message);
+        }
+        if (err.path === "calories") {
+          setCaloriesError(err.message);
+        }
+      });
+      return;
+    }
 
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/foods/empty`, {
@@ -62,12 +116,14 @@ const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
         listName: listName,
       })
       .then((response) => {
-        console.log("Empty list created successfully:", response.data);
         // navigate to search page
         closeModal();
       })
       .catch((error) => {
         console.error("Error creating empty list:", error);
+        if (error.response?.data?.message) {
+          setListNameError(error.response.data.message);
+        }
       });
   };
 
@@ -76,8 +132,6 @@ const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
     const newCalories = parseFloat(e.target.value) || 0;
     setCalories(newCalories);
   };
-
-  if (!isOpen) return null;
 
   return (
     <div
@@ -107,14 +161,18 @@ const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
             </label>
             <input
               type="text"
-              name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className={`bg-gray-50 border ${
+                listNameError ? "border-red-500" : "border-gray-300"
+              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               id="name"
               placeholder="Bulk list"
               required
               value={listName}
               onChange={(e) => setListName(e.target.value)}
             />
+            {listNameError && (
+              <p className="mt-2 text-sm text-red-500">{listNameError}</p>
+            )}
           </div>
           <div className="mb-5">
             <label
@@ -127,11 +185,16 @@ const NewListModal = ({ isOpen, closeModal, foods, openMode }) => {
               type="number"
               min={0}
               name=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className={`bg-gray-50 border ${
+                caloriesError ? "border-red-500" : "border-gray-300"
+              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               id="calories"
               value={calories}
               onChange={handleCaloriesChange}
             />
+            {caloriesError && (
+              <p className="mt-2 text-sm text-red-500">{caloriesError}</p>
+            )}
           </div>
           <button
             type="submit"
