@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { object, number } from "yup";
 
 const ListItem = () => {
+  // validation schema
+  const foodItemSchema = object({
+    quantity: number().required().min(1, "Quantity should be greater than 0"),
+  });
+
   // grabbing the passed location state variables
   const location = useLocation();
   const { foodItem, listId } = location.state || {};
@@ -17,6 +23,7 @@ const ListItem = () => {
     carbs: foodItem?.carbs,
     fats: foodItem?.fats,
   });
+  const [quantityError, setQuantityError] = useState("");
 
   const calculateNutirents = (newQuantity, newUnit) => {
     if (!foodItem) return;
@@ -61,7 +68,6 @@ const ListItem = () => {
         },
       })
       .then((response) => {
-        console.log("Food item deleted successfully");
         // navigate back to list page
         navigate(`/list/${listId}`, {
           state: { listId: listId, listName: "" },
@@ -74,6 +80,18 @@ const ListItem = () => {
 
   // function to update the food item
   const handleUpdate = () => {
+    setQuantityError("");
+    try {
+      foodItemSchema.validateSync({ quantity }, { abortEarly: false });
+    } catch (error) {
+      error.inner.forEach((err) => {
+        if (err.path === "quantity") {
+          setQuantityError(err.message);
+        }
+      });
+      return;
+    }
+
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/food/update`, {
         userId: userId,
@@ -90,7 +108,6 @@ const ListItem = () => {
         },
       })
       .then((response) => {
-        console.log("Food item updated successfully");
         setIsModifying(false);
       })
       .catch((error) => {
@@ -186,14 +203,19 @@ const ListItem = () => {
                 {isModifying ? "Choose quantity:" : "Quantity:"}
               </label>
               {isModifying ? (
-                <input
-                  type="number"
-                  value={quantity}
-                  onChange={handleQuantityChange}
-                  name=""
-                  id="number-input"
-                  className="text-sm p-2 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0"
-                />
+                <>
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={handleQuantityChange}
+                    min={0}
+                    id="number-input"
+                    className={`text-sm p-2 bg-transparent border-0 border-b-2 ${
+                      quantityError && "border-red-500"
+                    } appearance-none focus:outline-none focus:ring-0`}
+                  />
+                  <p className="mt-2 text-sm text-red-500">{quantityError}</p>
+                </>
               ) : (
                 <p className="text-sm p-2 bg-transparent border-0 appearance-none focus:outline-none focus:ring-0">
                   {quantity}

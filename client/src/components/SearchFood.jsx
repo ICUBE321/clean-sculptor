@@ -8,11 +8,11 @@ const SearchFood = ({ foodData, setFoodData }) => {
   // for pick list modal
   const [isPickListModalOpen, setIsPickListModalOpen] = useState(false);
 
-  const openPickListModal = () => setIsPickListModalOpen(true);
-  const closePickListModal = () => setIsPickListModalOpen(false);
-
   // for new list modal
   const [isNewListModalOpen, setIsNewListModalOpen] = useState(false);
+
+  const openPickListModal = () => setIsPickListModalOpen(true);
+  const closePickListModal = () => setIsPickListModalOpen(false);
 
   const openNewListModal = () => setIsNewListModalOpen(true);
   const closeNewListModal = () => setIsNewListModalOpen(false);
@@ -35,7 +35,6 @@ const SearchFood = ({ foodData, setFoodData }) => {
   const searchForFood = (e) => {
     e.preventDefault();
 
-    console.log("Queried food item:", queriedFood);
     // call function to search for food
     edamamGetRelatedFoods();
   };
@@ -57,8 +56,6 @@ const SearchFood = ({ foodData, setFoodData }) => {
 
   // // For parsing returned list of food gotten in response
   const parseReturnedFoodList = (foodResponse) => {
-    console.log(foodResponse.hints);
-
     let parsedFoodList = foodResponse.hints.map((foodItem) => {
       let qualifiers = "";
       for (const qualified in foodItem.measures[0]) {
@@ -88,7 +85,6 @@ const SearchFood = ({ foodData, setFoodData }) => {
       };
     });
 
-    console.log("Final parsed food list:", parsedFoodList);
     // set the foodData state variable to the parsed food list
     setFoodData(parsedFoodList);
   };

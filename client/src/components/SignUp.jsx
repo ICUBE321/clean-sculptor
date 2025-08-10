@@ -1,35 +1,72 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { object, string } from "yup";
 
 const SignUp = ({ setToken }) => {
+  // validation schema
+  const userSchema = object({
+    name: string()
+      .trim()
+      .required("Name is required")
+      .min(1, "Name is required"),
+    email: string()
+      .email("Invalid email address")
+      .required("Valid email is required"),
+    password: string()
+      .trim()
+      .required("Password is required")
+      .min(1, "Password is required"),
+  });
+
   //State variables to store user input
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can perform validation before submitting the form
-    // Check if the email is valid before submitting the form
-    if (!validateEmail(email)) {
-      setEmailError("Please enter a valid email address");
-      return;
-    }
-    // Reset email error if validation succeeds
-    setEmailError("");
 
     // For simplicity, let's just log the user input for now
     // You can also send the data to your backend server for processing
-    const token = await createUser({
+    await createUser({
       name,
       email,
       password,
     });
   };
 
+  // function to create user and get token from server
   async function createUser(credentials) {
+    try {
+      userSchema.validateSync(credentials, {
+        abortEarly: false,
+      });
+    } catch (error) {
+      // reset previous errors
+      setNameError("");
+      setEmailError("");
+      setPasswordError("");
+
+      // handle each validation error
+      error.inner.forEach((err) => {
+        if (err.path === "name") {
+          setNameError(err.message);
+        }
+
+        if (err.path === "email") {
+          setEmailError(err.message);
+        }
+
+        if (err.path === "password") {
+          setPasswordError(err.message);
+        }
+      });
+      return;
+    }
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/users`, {
         name: credentials.name,
@@ -41,14 +78,11 @@ const SignUp = ({ setToken }) => {
       })
       .catch(function (error) {
         console.log("Signup error:", error);
+        if (error.response?.data?.message) {
+          setEmailError(error.response.data.message);
+        }
       });
   }
-
-  //Function to validate email using regular expression
-  const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
 
   return (
     <div className="my-20">
@@ -66,14 +100,18 @@ const SignUp = ({ setToken }) => {
             </label>
             <input
               type="text"
-              name=""
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className={`bg-gray-50 border ${
+                nameError ? "border-red-500" : "border-gray-300"
+              } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               id="name"
               placeholder="John"
               required
             />
+            {nameError && (
+              <p className="mt-2 text-sm text-red-500">{nameError}</p>
+            )}
           </div>
         </div>
         <div className="mb-5">
@@ -85,14 +123,18 @@ const SignUp = ({ setToken }) => {
           </label>
           <input
             type="email"
-            name=""
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className={`bg-gray-50 border ${
+              emailError ? "border-red-500" : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
             id="email"
             placeholder="name@email.com"
             required
           />
+          {emailError && (
+            <p className="mt-2 text-sm text-red-500">{emailError}</p>
+          )}
         </div>
         <div className="mb-5">
           <label
@@ -103,13 +145,17 @@ const SignUp = ({ setToken }) => {
           </label>
           <input
             type="password"
-            name=""
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className={`bg-gray-50 border ${
+              passwordError ? "border-red-500" : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
             id="password"
             required
           />
+          {passwordError && (
+            <p className="mt-2 text-sm text-red-500">{passwordError}</p>
+          )}
         </div>
         <button
           type="submit"
