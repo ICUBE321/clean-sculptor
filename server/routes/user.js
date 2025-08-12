@@ -35,7 +35,7 @@ const createUser = async (request, response) => {
     });
 
     const userToSave = await user.save();
-    //use of tokens
+    // use of tokens
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
