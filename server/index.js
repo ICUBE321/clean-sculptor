@@ -8,8 +8,6 @@ require("dotenv").config({
 console.log(`Environment: ${process.env.NODE_ENV}`);
 const mongoString = process.env.MONGO_URI;
 
-const express = require("express");
-const cors = require("cors");
 // Database connection starts
 const mongoose = require("mongoose");
 mongoose.connect(mongoString);
@@ -24,10 +22,16 @@ database.once("connected", () => {
 });
 // Database connection ends
 
+const express = require("express");
 const app = express();
+
+// Adding security headers
+const helmet = require("helmet");
+app.use(helmet());
+
 app.use(express.json());
 
-// app.use(cooskieParser());
+// app.use(cookieParser());
 
 const user = require("./routes/user");
 const food = require("./routes/food");
@@ -39,20 +43,37 @@ const {
 } = require("./middleware/validators/userValidator");
 
 const {
-  saveFoodValidation,
   getFoodsValidation,
   deleteFoodValidation,
+  saveFoodToListValidation,
+  saveFoodListValidation,
+  getAllUserFoodsValidation,
+  updateFoodListValidation,
+  deleteFoodListValidation,
 } = require("./middleware/validators/foodValidator");
 
 const port = process.env.PORT;
+
+const cors = require("cors");
 
 //define the CORS options
 const corsOptions = {
   credentials: true,
   origin: [process.env.SERVER_DOMAIN, process.env.CLIENT_DOMAIN], //the whitelisted domains
+  methods: ["GET", "POST", "PUT", "DELETE"],
 };
 
 app.use(cors(corsOptions));
+
+// Rate limiting
+const rateLimit = require("express-rate-limit");
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+});
+
+app.use(limiter);
 
 //Error handling middleware
 app.use((err, req, res, next) => {
@@ -61,7 +82,7 @@ app.use((err, req, res, next) => {
 });
 
 app.get("/", function (request, response) {
-  response.json({ info: "Node.js, Express, and MongoDb API" });
+  response.json({ info: "Welcome to cleanSculptor" });
 });
 
 // user endpoints
@@ -73,17 +94,21 @@ app.put("/users/:id", userIdValidation, user.updateUser);
 app.delete("/users/:id", userIdValidation, user.deleteUser);
 
 // food endpoints
-app.get("/food_lists/all", food.getAllUserFoodLists);
-app.get("/food_list", food.getSpecificFoodList);
-app.post("/food", food.saveFoodToList);
-app.post("/foods", food.saveSpecificFoodList);
-app.post("/foods/empty", food.createEmptyFoodList);
-app.post("/food_list/update", food.updateSpecificFoodList);
-app.post("/food/update", food.updateFoodItem);
-app.delete("/food", food.deleteFoodFromList);
-app.delete("/food_list", food.deleteFoodList);
+app.get("/food_lists/all", getAllUserFoodsValidation, food.getAllUserFoodLists);
+app.get("/food_list", getFoodsValidation, food.getSpecificFoodList);
+app.post("/food", saveFoodToListValidation, food.saveFoodToList);
+app.post("/foods", saveFoodListValidation, food.saveSpecificFoodList);
+app.post("/foods/empty", saveFoodListValidation, food.createEmptyFoodList);
+app.post(
+  "/food_list/update",
+  updateFoodListValidation,
+  food.updateSpecificFoodList
+);
+app.post("/food/update", saveFoodToListValidation, food.updateFoodItem);
+app.delete("/food", deleteFoodValidation, food.deleteFoodFromList);
+app.delete("/food_list", deleteFoodListValidation, food.deleteFoodList);
 
 // Start the server
 app.listen(port, () => {
-  console.log(`App running on port ${port}.`);
+  console.log(`cleanSculptor running on port ${port}.`);
 });

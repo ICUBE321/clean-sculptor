@@ -1,4 +1,4 @@
-const { body, param, validationResult, escape } = require("express-validator");
+const { body, param, validationResult } = require("express-validator");
 
 // validation chains
 const createUserValidation = [
@@ -37,8 +37,8 @@ const loginUserValidation = [
 ];
 
 const userIdValidation = [
-  param("id").isMongoId().withMessage("Invalid user ID"),
-  param("id").notEmpty().withMessage("User ID is required"),
+  param("userId").isMongoId().withMessage("Invalid user ID"),
+  param("userId").notEmpty().withMessage("User ID is required"),
 
   (req, res, next) => {
     const errors = validationResult(req);
