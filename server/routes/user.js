@@ -31,7 +31,7 @@ const createUser = async (request, response) => {
     const user = new UserModel({
       name: validData.name,
       email: validData.email,
-      password: validData.password,
+      password: hashedPassword,
     });
 
     const userToSave = await user.save();
@@ -87,8 +87,8 @@ const loginUser = async (request, response) => {
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
-    if (password != user.password) {
-      console.log(`Authentication failed - invalid password ${password}`);
+    if (!passwordMatch) {
+      console.log(`Authentication failed - invalid password for user ${email}`);
       return response.status(401).json({ message: "Invalid login" });
     }
 
