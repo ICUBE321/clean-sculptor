@@ -47,7 +47,21 @@ const SearchFood = ({ foodData, setFoodData }) => {
     setIsSearching(true);
     setSearchError("");
     setFoodData([]); // reset foodData state
-    let url = `https://api.edamam.com/api/food-database/v2/parser?app_id=0ac97a9d&app_key=37ae6336466c5bf7c4328965b8cab27d&ingr=${queriedFood}`;
+
+    const appId = import.meta.env.VITE_EDAMAM_APP_ID;
+    const appKey = import.meta.env.VITE_EDAMAM_APP_KEY;
+
+    if (!appId || !appKey) {
+      setSearchError(
+        "Food search service is not configured. Please contact support."
+      );
+      setIsSearching(false);
+      return;
+    }
+
+    let url = `https://api.edamam.com/api/food-database/v2/parser?app_id=${appId}&app_key=${appKey}&ingr=${encodeURIComponent(
+      queriedFood
+    )}`;
     axios
       .get(url)
       .then((response) => {

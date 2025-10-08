@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -11,6 +11,7 @@ import ListItemPage from "./pages/ListItemPage";
 import ListPage from "./pages/ListPage";
 import useToken from "./hooks/useToken";
 import LogoutPage from "./pages/LogoutPage";
+import { validateEnvironment } from "./utils/validateEnv";
 
 function App() {
   const { token, setToken, removeToken } = useToken();
