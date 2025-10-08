@@ -25,6 +25,7 @@ const SignUp = ({ setToken }) => {
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
@@ -67,6 +68,12 @@ const SignUp = ({ setToken }) => {
       });
       return;
     }
+
+    setIsLoading(true);
+    setNameError("");
+    setEmailError("");
+    setPasswordError("");
+
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/users`, {
         name: credentials.name,
@@ -81,6 +88,9 @@ const SignUp = ({ setToken }) => {
         if (error.response?.data?.message) {
           setEmailError(error.response.data.message);
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
@@ -160,9 +170,17 @@ const SignUp = ({ setToken }) => {
         <button
           type="submit"
           onClick={handleSubmit}
-          className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
+          disabled={isLoading}
+          className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         >
-          SIGN UP
+          {isLoading ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+              CREATING ACCOUNT...
+            </>
+          ) : (
+            "SIGN UP"
+          )}
         </button>
       </form>
     </div>

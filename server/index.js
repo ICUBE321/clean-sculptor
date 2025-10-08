@@ -5,6 +5,20 @@ require("dotenv").config({
     `.env.${process.env.NODE_ENV || "development"}`
   ),
 });
+
+// Validate required environment variables
+const requiredEnvVars = ["MONGO_URI", "JWT_SECRET", "PORT"];
+const missingEnvVars = requiredEnvVars.filter(
+  (varName) => !process.env[varName]
+);
+
+if (missingEnvVars.length > 0) {
+  console.error(
+    `Missing required environment variables: ${missingEnvVars.join(", ")}`
+  );
+  process.exit(1);
+}
+
 console.log(`Environment: ${process.env.NODE_ENV}`);
 const mongoString = process.env.MONGO_URI;
 
@@ -29,7 +43,34 @@ const app = express();
 const helmet = require("helmet");
 app.use(helmet());
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+
+// Input sanitization middleware
+app.use((req, res, next) => {
+  // Sanitize request body recursively
+  const sanitizeObject = (obj) => {
+    if (typeof obj === "string") {
+      // Basic XSS prevention
+      return obj
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+        .trim();
+    }
+    if (typeof obj === "object" && obj !== null) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          obj[key] = sanitizeObject(obj[key]);
+        }
+      }
+    }
+    return obj;
+  };
+
+  if (req.body) {
+    req.body = sanitizeObject(req.body);
+  }
+
+  next();
+});
 
 // app.use(cookieParser());
 

@@ -19,6 +19,7 @@ const Login = ({ setToken }) => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
@@ -54,6 +55,11 @@ const Login = ({ setToken }) => {
       });
       return;
     }
+
+    setIsLoading(true);
+    setEmailError("");
+    setPasswordError("");
+
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/login`, {
         email: credentials.email,
@@ -67,15 +73,18 @@ const Login = ({ setToken }) => {
         if (error.response?.data?.message) {
           setEmailError(error.response.data.message);
         }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
   return (
-    <div className="my-20">
-      <h1 className="text-5xl font-extrabold text-center dark:text-lightblue mb-20">
+    <div className="my-10 md:my-20 px-4">
+      <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-center dark:text-lightblue mb-10 md:mb-20">
         ENTER YOUR KITCHEN
       </h1>
-      <form className="max-w-sm mx-auto">
+      <form className="max-w-sm mx-auto space-y-4 md:space-y-6">
         <div className="mb-5">
           <label
             htmlFor="email"
@@ -122,9 +131,17 @@ const Login = ({ setToken }) => {
         <button
           type="submit"
           onClick={handleSubmit}
-          className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue"
+          disabled={isLoading}
+          className="border focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-lightblue text-gray hover:text-darkblue hover:bg-lightblue disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         >
-          SIGN IN
+          {isLoading ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+              SIGNING IN...
+            </>
+          ) : (
+            "SIGN IN"
+          )}
         </button>
       </form>
     </div>

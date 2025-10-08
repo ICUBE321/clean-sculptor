@@ -8,8 +8,22 @@ const useToken = () => {
   // retrieve token from local storage for validation
   const getToken = () => {
     const tokenString = localStorage.getItem("token");
-    const userToken = JSON.parse(tokenString);
-    return userToken;
+    if (!tokenString) return null;
+
+    try {
+      const userToken = JSON.parse(tokenString);
+      // Basic token format validation
+      if (typeof userToken === "string" && userToken.length > 0) {
+        return userToken;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error parsing token:", error);
+      // Clear invalid token
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      return null;
+    }
   };
 
   const [token, setToken] = useState(getToken());

@@ -19,6 +19,8 @@ const SearchFood = ({ foodData, setFoodData }) => {
 
   // State variables to store user input and validation status
   const [queriedFood, setQueriedFood] = useState(""); // user selected fod item
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState("");
   const [selectedFood, setSelectedFood] = useState({
     id: "",
     name: "",
@@ -34,6 +36,7 @@ const SearchFood = ({ foodData, setFoodData }) => {
   // // Function to handle food search form submission
   const searchForFood = (e) => {
     e.preventDefault();
+    if (!queriedFood.trim()) return;
 
     // call function to search for food
     edamamGetRelatedFoods();
@@ -41,8 +44,24 @@ const SearchFood = ({ foodData, setFoodData }) => {
 
   // // To get the list of related foods using edamam api
   const edamamGetRelatedFoods = () => {
+    setIsSearching(true);
+    setSearchError("");
     setFoodData([]); // reset foodData state
-    let url = `https://api.edamam.com/api/food-database/v2/parser?app_id=0ac97a9d&app_key=37ae6336466c5bf7c4328965b8cab27d&ingr=${queriedFood}`;
+
+    const appId = import.meta.env.VITE_EDAMAM_APP_ID;
+    const appKey = import.meta.env.VITE_EDAMAM_APP_KEY;
+
+    if (!appId || !appKey) {
+      setSearchError(
+        "Food search service is not configured. Please contact support."
+      );
+      setIsSearching(false);
+      return;
+    }
+
+    let url = `https://api.edamam.com/api/food-database/v2/parser?app_id=${appId}&app_key=${appKey}&ingr=${encodeURIComponent(
+      queriedFood
+    )}`;
     axios
       .get(url)
       .then((response) => {
@@ -51,11 +70,20 @@ const SearchFood = ({ foodData, setFoodData }) => {
       })
       .catch((error) => {
         console.error("Error fetching food list data:", error);
+        setSearchError("Failed to search for food items. Please try again.");
+      })
+      .finally(() => {
+        setIsSearching(false);
       });
   };
 
   // // For parsing returned list of food gotten in response
   const parseReturnedFoodList = (foodResponse) => {
+    if (!foodResponse.hints || foodResponse.hints.length === 0) {
+      setSearchError("No food items found. Try a different search term.");
+      return;
+    }
+
     let parsedFoodList = foodResponse.hints.map((foodItem) => {
       let qualifiers = "";
       for (const qualified in foodItem.measures[0]) {
@@ -103,48 +131,60 @@ const SearchFood = ({ foodData, setFoodData }) => {
         foods={[selectedFood]}
         openMode="food"
       />
-      <h1
-        htmlFor="default-search"
-        className="text-5xl font-extrabold text-center dark:text-lightblue mb-20"
-      >
+      <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-center dark:text-lightblue mb-10 md:mb-20">
         WHAT&apos;S THE NEXT MEAL?
       </h1>
-      <form onSubmit={searchForFood} className="mb-12">
+      <form
+        onSubmit={searchForFood}
+        className="mb-8 md:mb-12 w-full max-w-xl mx-auto px-4"
+      >
         <div className="relative">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg
-              className="w-4 h-4 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
+            {isSearching ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-lightblue"></div>
+            ) : (
+              <svg
+                className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+              </svg>
+            )}
           </div>
           <input
             type="search"
             id="default-search"
             className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-darkgray dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search food item"
-            required
+            value={queriedFood}
             onChange={(e) => setQueriedFood(e.target.value)}
+            disabled={isSearching}
+            required
           />
           <button
             type="submit"
-            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-lightblue font-medium rounded-lg text-sm px-4 py-2 dark:bg-darkbg dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-lightblue"
+            disabled={isSearching || !queriedFood.trim()}
+            className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-lightblue font-medium rounded-lg text-sm px-4 py-2 dark:bg-darkbg dark:border-lightblue dark:text-gray dark:hover:text-darkblue dark:hover:bg-lightblue dark:focus:ring-lightblue disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Find
+            {isSearching ? "Searching..." : "Find"}
           </button>
         </div>
+        {searchError && (
+          <div className="mt-2 text-sm text-red-500 text-center">
+            {searchError}
+          </div>
+        )}
       </form>
-      <ul className="h-96 overflow-auto max-w-lg divide-y divide-gray-200 dark:divide-gray-700 mx-auto">
+      <ul className="h-96 overflow-auto max-w-lg mx-4 md:mx-auto">
         {foodData &&
           foodData.map((foodItem, index) => {
             return (
